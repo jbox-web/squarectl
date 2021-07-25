@@ -1,0 +1,24 @@
+name: squarectl
+
+version: 0.1.0
+
+crystal: 1.1.1
+
+license: MIT
+
+authors:
+  - Nicolas Rodriguez <nico@nicoladmin.fr>
+
+targets:
+  squarectl:
+    main: src/squarectl.cr
+
+dependencies:
+  admiral:
+    github: jwaldrip/admiral.cr
+  baked_file_system:
+    github: schovi/baked_file_system
+    version: 0.10.0
+  crystal-env:
+    github: crystal-lang/crystal-env
+    branch: master

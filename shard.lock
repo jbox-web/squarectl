@@ -1,0 +1,14 @@
+version: 2.0
+shards:
+  admiral:
+    git: https://github.com/jwaldrip/admiral.cr.git
+    version: 1.12.1
+
+  baked_file_system:
+    git: https://github.com/schovi/baked_file_system.git
+    version: 0.10.0
+
+  crystal-env:
+    git: https://github.com/crystal-lang/crystal-env.git
+    version: 0.1.0+git.commit.172cf5709b56831b8a2581d826f0262ac4f7cffd
+

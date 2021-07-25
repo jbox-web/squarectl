@@ -1,0 +1,7 @@
+# Ignore generated data
+/docs/
+/lib/
+
+# Ignore all bin files
+/bin/*
+!/bin/.keep
