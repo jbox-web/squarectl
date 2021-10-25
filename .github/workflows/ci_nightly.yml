@@ -1,0 +1,44 @@
+---
+name: CI Nightly
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+
+
+jobs:
+  test_linux:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Crystal
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: nightly
+          shards: nightly
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Run tests
+        run: make spec
+
+  test_macos:
+    runs-on: macos-11
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Crystal
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: nightly
+          shards: nightly
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Run tests
+        run: make spec
