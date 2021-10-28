@@ -17,6 +17,13 @@ SPEC_OPTS            =
 COMPILE_OPTS_DEV     = --threads 4
 COMPILE_OPTS_RELEASE = --threads 4 --release --error-trace
 
+# Use sudo if current user is not root
+ifneq ($(UID), 0)
+	sudo = sudo
+else
+	sudo =
+endif
+
 ifeq ($(shell tty -s && echo true),true)
   SPEC_OPTS += --verbose
   COMPILE_OPTS_DEV += --progress
@@ -82,10 +89,10 @@ deps-release: ## Install production dependencies
 	shards install --production
 
 install: ## Install squarectl in $(INSTALL_DIR)
-	cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/squarectl
+	$(sudo) cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/squarectl
 
 uninstall: ## Uninstall squarectl from $(INSTALL_DIR)
-	rm -f $(INSTALL_DIR)/squarectl
+	$(sudo) rm -f $(INSTALL_DIR)/squarectl
 
 release-static: ## Build static binary with Earthly
 	earthly --ci --output +all-binaries
