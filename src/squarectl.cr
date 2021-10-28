@@ -24,41 +24,48 @@ module Squarectl
     VERSION
   end
 
-  def self.config=(config : Squarectl::Config::SquarectlConfig)
-    @@config = config
-  end
-
-  def self.config
-    @@config ||= Squarectl::Config::SquarectlConfig.from_yaml("")
-  end
-
-  def self.environments=(environments : Array(Squarectl::Config::SquarectlEnvironment))
-    @@environments = environments
-  end
-
-  def self.environments
-    @@environments
-  end
-
-  def self.find_environment(environment, target)
-    env = environments.not_nil!.find { |e| e.name.includes?(environment) }
-    raise "Environment not found: #{environment}" if env.nil?
-    raise "You can't use this command in development environment" if env.development? && target != "compose"
-    env
-  end
-
-  def self.environment_all
-    @@environment_all ||= Squarectl.environments.not_nil!.find { |e| e.name == "all" }
-  end
-
   def self.load_config(config_path)
     config_file = File.read(config_path)
     self.config = Squarectl::Config::SquarectlConfig.from_yaml(config_file)
     self.environments = config.environments
   end
 
+  def self.reset_config!
+    @@config = nil
+    @@environments = nil
+    @@environment_all = nil
+  end
+
+  private def self.config=(config : Squarectl::Config::SquarectlConfig)
+    @@config = config
+  end
+
+  private def self.environments=(environments : Array(Squarectl::Config::SquarectlEnvironment))
+    @@environments = environments
+  end
+
+  def self.config
+    @@config ||= Squarectl::Config::SquarectlConfig.from_yaml("")
+  end
+
+  def self.environments
+    @@environments || [] of Squarectl::Config::SquarectlEnvironment
+  end
+
+  def self.environment_all
+    @@environment_all ||= environments.not_nil!.find { |e| e.name == "all" }
+  end
+
+  def self.find_environment(environment, target)
+    raise "Target not found: #{target}" if !%w[compose swarm kubernetes].includes?(target)
+    env = environments.not_nil!.find { |e| e.name.includes?(environment) }
+    raise "Environment not found: #{environment}" if env.nil?
+    raise "You can't use this command in development environment" if env.development? && target != "compose"
+    env
+  end
+
   def self.app_name
-    Squarectl.config.app
+    config.app
   end
 
   def self.root_dir
