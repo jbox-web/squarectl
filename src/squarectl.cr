@@ -29,7 +29,7 @@ module Squarectl
   end
 
   def self.config
-    @@config ||= Squarectl::Config::SquarectlConfig.from_json("")
+    @@config ||= Squarectl::Config::SquarectlConfig.from_yaml("")
   end
 
   def self.environments=(environments : Array(Squarectl::Config::SquarectlEnvironment))

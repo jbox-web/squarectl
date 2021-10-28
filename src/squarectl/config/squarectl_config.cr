@@ -6,7 +6,7 @@ module Squarectl
       include YAML::Serializable
 
       property app : String = "example"
-      property environments : Array(SquarectlEnvironment)
+      property environments : Array(SquarectlEnvironment) = [] of SquarectlEnvironment
     end
   end
 end

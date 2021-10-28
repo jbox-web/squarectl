@@ -32,4 +32,12 @@ Spectator.describe Squarectl do
       expect(Squarectl.targets_common_dir).to eq(squarectl_root_dir.join("squarectl").join("targets").join("common"))
     end
   end
+
+  context "with minimal config" do
+    describe ".app_name" do
+      it "returns Squarectl app_name" do
+        expect(Squarectl.app_name).to eq("example")
+      end
+    end
+  end
 end
