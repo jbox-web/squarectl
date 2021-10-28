@@ -11,6 +11,12 @@ Spectator.describe Squarectl do
     end
   end
 
+  describe ".kubernetes_dir" do
+    it "returns Squarectl kubernetes_dir" do
+      expect(Squarectl.kubernetes_dir).to eq(squarectl_root_dir.join("kubernetes"))
+    end
+  end
+
   describe ".data_dir" do
     it "returns Squarectl data_dir" do
       expect(Squarectl.data_dir).to eq(squarectl_root_dir.join("squarectl"))
