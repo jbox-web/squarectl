@@ -1,10 +1,8 @@
 require "../spec_helper.cr"
 
-def squarectl_root_dir
-  Path.new(Dir.current)
-end
-
 Spectator.describe Squarectl do
+  let(squarectl_root_dir) { Path.new(Dir.current) }
+
   describe ".root_dir" do
     it "returns Squarectl root_dir" do
       expect(Squarectl.root_dir).to eq(squarectl_root_dir)
