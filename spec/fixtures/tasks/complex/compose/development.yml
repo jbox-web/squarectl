@@ -1,0 +1,51 @@
+---
+SQUARECTL_APP: myapp
+SQUARECTL_ENV: development
+SQUARECTL_TARGET: compose
+SQUARECTL_TARGET_SERVER: ""
+SQUARECTL_CWD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr
+SQUARECTL_DATA_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl
+SQUARECTL_TARGETS_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets
+SQUARECTL_TARGETS_COMMON_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common
+SQUARECTL_ENV_VARS:
+  TRAEFIK_DOMAIN: traefik.mydomain.local
+  GRAFANA_DOMAIN: grafana.mydomain.local
+  PROMETHEUS_DOMAIN: prometheus.mydomain.local
+SQUARECTL_DOMAINS:
+  BACK_OFFICE_URL: https://back.mydomain.local
+  STATIC_FILES_URL: https://static.mydomain.local
+  FRENCH_SITE_URL: https://front-fr.mydomain.local
+  SPANISH_SITE_URL: https://front-es.mydomain.local
+  BACK_OFFICE_DOMAIN: back.mydomain.local
+  BACK_OFFICE_SCHEME: https
+  STATIC_FILES_DOMAIN: static.mydomain.local
+  STATIC_FILES_SCHEME: https
+  FRENCH_SITE_DOMAIN: front-fr.mydomain.local
+  FRENCH_SITE_SCHEME: https
+  SPANISH_SITE_DOMAIN: front-es.mydomain.local
+  SPANISH_SITE_SCHEME: https
+SQUARECTL_FILES:
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/base.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/compose/common.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/compose/development.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/monitoring.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/debug.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/networks.yml
+SQUARECTL_NETWORKS:
+- traefik-public
+SQUARECTL_SSL_CERTIFICATES:
+- domain: '*.mydomain.local'
+  cert_path: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/ssl/development/wildcard.mydomain-fr.crt
+  key_path: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/ssl/development/wildcard.mydomain-fr.key
+- domain: '*.mydomain-es.local'
+  cert_path: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/ssl/development/wildcard.mydomain-es.crt
+  key_path: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/ssl/development/wildcard.mydomain-es.key
+SQUARECTL_SETUP_COMMANDS:
+- service: crono
+  command:
+  - bash
+  - -l
+  - -c
+  - bin/rails db:setup
+SQUARECTL_CONFIG_FILES: {}
+SQUARECTL_SECRET_FILES: {}

@@ -1,0 +1,40 @@
+---
+SQUARECTL_APP: myapp
+SQUARECTL_ENV: production
+SQUARECTL_TARGET: kubernetes
+SQUARECTL_TARGET_SERVER: ""
+SQUARECTL_CWD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr
+SQUARECTL_DATA_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl
+SQUARECTL_TARGETS_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets
+SQUARECTL_TARGETS_COMMON_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common
+SQUARECTL_ENV_VARS: {}
+SQUARECTL_DOMAINS:
+  BACK_OFFICE_URL: http://back.mydomain-production.net
+  STATIC_FILES_URL: http://static.mydomain-production.net
+  FRENCH_SITE_URL: http://front-fr.mydomain-production.net
+  SPANISH_SITE_URL: http://front-es.mydomain-production.net
+  BACK_OFFICE_DOMAIN: back.mydomain-production.net
+  BACK_OFFICE_SCHEME: http
+  STATIC_FILES_DOMAIN: static.mydomain-production.net
+  STATIC_FILES_SCHEME: http
+  FRENCH_SITE_DOMAIN: front-fr.mydomain-production.net
+  FRENCH_SITE_SCHEME: http
+  SPANISH_SITE_DOMAIN: front-es.mydomain-production.net
+  SPANISH_SITE_SCHEME: http
+SQUARECTL_FILES:
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/base.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/kubernetes/common.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/kubernetes/production.yml
+SQUARECTL_NETWORKS: []
+SQUARECTL_SSL_CERTIFICATES: []
+SQUARECTL_SETUP_COMMANDS:
+- service: crono
+  command:
+  - bash
+  - -l
+  - -c
+  - bin/rails myapp:db:setup
+SQUARECTL_CONFIG_FILES: {}
+SQUARECTL_SECRET_FILES:
+  myapp-prod__MYAPP_SECRETS: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/production/mydomain.sh
+  myapp-prod__POSTGRES_PASSWORD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/production/postgres_password.sh

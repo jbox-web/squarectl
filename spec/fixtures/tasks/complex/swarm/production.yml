@@ -1,0 +1,41 @@
+---
+SQUARECTL_APP: myapp
+SQUARECTL_ENV: production
+SQUARECTL_TARGET: swarm
+SQUARECTL_TARGET_SERVER: ssh://perso.swarm-dev
+SQUARECTL_CWD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr
+SQUARECTL_DATA_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl
+SQUARECTL_TARGETS_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets
+SQUARECTL_TARGETS_COMMON_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common
+SQUARECTL_ENV_VARS: {}
+SQUARECTL_DOMAINS:
+  BACK_OFFICE_URL: https://back.mydomain-production.net
+  STATIC_FILES_URL: https://static.mydomain-production.net
+  FRENCH_SITE_URL: https://front-fr.mydomain-production.net
+  SPANISH_SITE_URL: https://front-es.mydomain-production.net
+  BACK_OFFICE_DOMAIN: back.mydomain-production.net
+  BACK_OFFICE_SCHEME: https
+  STATIC_FILES_DOMAIN: static.mydomain-production.net
+  STATIC_FILES_SCHEME: https
+  FRENCH_SITE_DOMAIN: front-fr.mydomain-production.net
+  FRENCH_SITE_SCHEME: https
+  SPANISH_SITE_DOMAIN: front-es.mydomain-production.net
+  SPANISH_SITE_SCHEME: https
+SQUARECTL_FILES:
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/base.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/swarm/common.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/swarm/production.yml
+- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/networks.yml
+SQUARECTL_NETWORKS: []
+SQUARECTL_SSL_CERTIFICATES: []
+SQUARECTL_SETUP_COMMANDS:
+- service: crono
+  command:
+  - bash
+  - -l
+  - -c
+  - bin/rails myapp:db:setup
+SQUARECTL_CONFIG_FILES: {}
+SQUARECTL_SECRET_FILES:
+  myapp-prod__MYAPP_SECRETS: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/production/mydomain.sh
+  myapp-prod__POSTGRES_PASSWORD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/production/postgres_password.sh
