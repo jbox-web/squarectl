@@ -5,6 +5,9 @@ require "spectator"
 Spectator.configure do |config|
   config.randomize
   config.profile
+  config.after_each do
+    Squarectl.reset_config!
+  end
 end
 
 require "../src/squarectl"

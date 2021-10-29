@@ -1,8 +1,6 @@
 require "../spec_helper.cr"
 
 Spectator.describe Squarectl do
-  after_each { Squarectl.reset_config! }
-
   let(squarectl_root_dir) { Path.new(Dir.current) }
 
   describe ".root_dir" do

@@ -80,9 +80,6 @@ end
 Spectator.describe Squarectl::TaskFactory do
   include TestHelper
 
-  before_each { ENV["MYAPP_RELEASE"] = "1.0.0" }
-  after_each { ENV.delete("MYAPP_RELEASE") }
-  after_each { Squarectl.reset_config! }
   let(root_dir) { Squarectl.root_dir }
 
   let(environment_object) { Squarectl.find_environment(environment: environment, target: target) }
@@ -93,6 +90,9 @@ Spectator.describe Squarectl::TaskFactory do
   end
 
   context "with complex config" do
+    before_each { ENV["MYAPP_RELEASE"] = "1.0.0" }
+    after_each { ENV.delete("MYAPP_RELEASE") }
+
     before_each { Squarectl.load_config(config_file) }
 
     let(config_file) { "spec/fixtures/config/complex.yml" }
