@@ -1,6 +1,45 @@
 require "../../spec_helper.cr"
 
+module TestHelper
+  def test_global_env_vars
+    expect(task).to be_a(Squarectl::Task)
+    expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq(
+      {
+        "#{target.upcase}_ALL_ONLY"                   => "true",
+        "ALL_TARGETS"                                 => "true",
+        "#{target.upcase}_#{environment.upcase}_ONLY" => "true",
+        "#{environment.upcase}_ONLY_ALL_TARGETS"      => "true",
+      }
+    )
+  end
+
+  def test_global_networks
+    expect(task).to be_a(Squarectl::Task)
+    expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq [
+      "#{target}_all_only",
+      "all_targets",
+      "#{target}_#{environment}_only",
+      "#{environment}_only_all_targets",
+    ]
+  end
+
+  def test_global_compose_files
+    expect(task).to be_a(Squarectl::Task)
+    expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
+      "#{root_dir}/squarectl/base.yml",
+      "#{root_dir}/squarectl/targets/#{target}/common.yml",
+      "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
+      "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
+      "#{root_dir}/squarectl/targets/common/all_targets.yml",
+      "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
+      "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
+    ]
+  end
+end
+
 Spectator.describe Squarectl::TaskFactory do
+  include TestHelper
+
   before_each { ENV["MYAPP_RELEASE"] = "1.0.0" }
   after_each { ENV.delete("MYAPP_RELEASE") }
   after_each { Squarectl.reset_config! }
@@ -106,28 +145,19 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is development" do
         let(environment) { "development" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"COMPOSE_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "COMPOSE_DEVELOPMENT_ONLY" => "true", "DEVELOPMENT_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
 
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"COMPOSE_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "COMPOSE_STAGING_ONLY" => "true", "STAGING_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"COMPOSE_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "COMPOSE_PRODUCTION_ONLY" => "true", "PRODUCTION_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
     end
 
@@ -137,19 +167,13 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"SWARM_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "SWARM_STAGING_ONLY" => "true", "STAGING_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"SWARM_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "SWARM_PRODUCTION_ONLY" => "true", "PRODUCTION_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
     end
 
@@ -159,19 +183,13 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"KUBERNETES_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "KUBERNETES_STAGING_ONLY" => "true", "STAGING_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_ENV_VARS"]).to eq({"KUBERNETES_ALL_ONLY" => "true", "ALL_TARGETS" => "true", "KUBERNETES_PRODUCTION_ONLY" => "true", "PRODUCTION_ONLY_ALL_TARGETS" => "true"})
-        end
+        it "returns a built Task object" { test_global_env_vars }
       end
     end
   end
@@ -187,28 +205,19 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is development" do
         let(environment) { "development" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["COMPOSE_ALL_ONLY", "ALL_TARGETS", "COMPOSE_DEVELOPMENT_ONLY", "DEVELOPMENT_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
 
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["COMPOSE_ALL_ONLY", "ALL_TARGETS", "COMPOSE_STAGING_ONLY", "STAGING_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["COMPOSE_ALL_ONLY", "ALL_TARGETS", "COMPOSE_PRODUCTION_ONLY", "PRODUCTION_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
     end
 
@@ -218,19 +227,13 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["SWARM_ALL_ONLY", "ALL_TARGETS", "SWARM_STAGING_ONLY", "STAGING_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["SWARM_ALL_ONLY", "ALL_TARGETS", "SWARM_PRODUCTION_ONLY", "PRODUCTION_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
     end
 
@@ -240,19 +243,13 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["KUBERNETES_ALL_ONLY", "ALL_TARGETS", "KUBERNETES_STAGING_ONLY", "STAGING_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["KUBERNETES_ALL_ONLY", "ALL_TARGETS", "KUBERNETES_PRODUCTION_ONLY", "PRODUCTION_ONLY_ALL_TARGETS"]
-        end
+        it "returns a built Task object" { test_global_networks }
       end
     end
   end
@@ -268,52 +265,19 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is development" do
         let(environment) { "development" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
 
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
     end
 
@@ -323,35 +287,13 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
     end
 
@@ -361,35 +303,13 @@ Spectator.describe Squarectl::TaskFactory do
       context "when environment is staging" do
         let(environment) { "staging" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
 
       context "when environment is production" do
         let(environment) { "production" }
 
-        it "returns a built Task object" do
-          expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment["SQUARECTL_FILES"]).to eq [
-            "#{root_dir}/squarectl/base.yml",
-            "#{root_dir}/squarectl/targets/#{target}/common.yml",
-            "#{root_dir}/squarectl/targets/#{target}/#{environment}.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_all_only.yml",
-            "#{root_dir}/squarectl/targets/common/all_targets.yml",
-            "#{root_dir}/squarectl/targets/common/#{target}_#{environment}_only.yml",
-            "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
-          ]
-        end
+        it "returns a built Task object" { test_global_compose_files }
       end
     end
   end

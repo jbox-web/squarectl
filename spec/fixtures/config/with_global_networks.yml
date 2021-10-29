@@ -5,82 +5,82 @@ environments:
     networks:
       - target: compose
         networks:
-          - COMPOSE_ALL_ONLY
+          - compose_all_only
 
       - target: swarm
         networks:
-          - SWARM_ALL_ONLY
+          - swarm_all_only
 
       - target: kubernetes
         networks:
-          - KUBERNETES_ALL_ONLY
+          - kubernetes_all_only
 
       - target:
           - compose
           - swarm
           - kubernetes
         networks:
-          - ALL_TARGETS
+          - all_targets
 
   - name: development
     networks:
       - target: compose
         networks:
-          - COMPOSE_DEVELOPMENT_ONLY
+          - compose_development_only
 
       - target: swarm
         networks:
-          - SWARM_DEVELOPMENT_ONLY
+          - swarm_development_only
 
       - target: kubernetes
         networks:
-          - KUBERNETES_DEVELOPMENT_ONLY
+          - kubernetes_development_only
 
       - target:
           - compose
           - swarm
           - kubernetes
         networks:
-          - DEVELOPMENT_ONLY_ALL_TARGETS
+          - development_only_all_targets
 
   - name: staging
     networks:
       - target: compose
         networks:
-          - COMPOSE_STAGING_ONLY
+          - compose_staging_only
 
       - target: swarm
         networks:
-          - SWARM_STAGING_ONLY
+          - swarm_staging_only
 
       - target: kubernetes
         networks:
-          - KUBERNETES_STAGING_ONLY
+          - kubernetes_staging_only
 
       - target:
           - compose
           - swarm
           - kubernetes
         networks:
-          - STAGING_ONLY_ALL_TARGETS
+          - staging_only_all_targets
 
   - name: production
     networks:
       - target: compose
         networks:
-          - COMPOSE_PRODUCTION_ONLY
+          - compose_production_only
 
       - target: swarm
         networks:
-          - SWARM_PRODUCTION_ONLY
+          - swarm_production_only
 
       - target: kubernetes
         networks:
-          - KUBERNETES_PRODUCTION_ONLY
+          - kubernetes_production_only
 
       - target:
           - compose
           - swarm
           - kubernetes
         networks:
-          - PRODUCTION_ONLY_ALL_TARGETS
+          - production_only_all_targets
