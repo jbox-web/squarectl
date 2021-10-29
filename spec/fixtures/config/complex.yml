@@ -1,0 +1,129 @@
+---
+app: myapp
+compose:
+  version: 1
+
+environments:
+
+  - name: all
+    env_vars:
+      - target: compose
+        vars:
+          TRAEFIK_DOMAIN: traefik.mydomain.local
+          GRAFANA_DOMAIN: grafana.mydomain.local
+          PROMETHEUS_DOMAIN: prometheus.mydomain.local
+
+    compose_files:
+      - target: compose
+        files:
+          - monitoring.yml
+          - debug.yml
+          - networks.yml
+
+      - target: swarm
+        files:
+          - networks.yml
+
+    networks:
+      - target: compose
+        networks:
+          - traefik-public
+
+  - name: development
+    domains:
+      - target: all
+        domains:
+          BACK_OFFICE_URL: https://back.mydomain.local
+          STATIC_FILES_URL: https://static.mydomain.local
+          FRENCH_SITE_URL: https://front-fr.mydomain.local
+          SPANISH_SITE_URL: https://front-es.mydomain.local
+
+    ssl_certificates:
+      - target: compose
+        ssl_certificates:
+          - domain: '*.mydomain.local'
+            cert_path: deploy/ssl/development/wildcard.mydomain-fr.crt
+            key_path: deploy/ssl/development/wildcard.mydomain-fr.key
+
+          - domain: '*.mydomain-es.local'
+            cert_path: deploy/ssl/development/wildcard.mydomain-es.crt
+            key_path: deploy/ssl/development/wildcard.mydomain-es.key
+
+    setup_commands:
+      - target: compose
+        service: crono
+        command:
+          - bash
+          - -l
+          - -c
+          - bin/rails db:setup
+
+  - name: staging
+    domains:
+      - target:
+          - compose
+          - swarm
+        domains:
+          BACK_OFFICE_URL: https://back.mydomain-staging.net
+          STATIC_FILES_URL: https://static.mydomain-staging.net
+          FRENCH_SITE_URL: https://front-fr.mydomain-staging.net
+          SPANISH_SITE_URL: https://front-es.mydomain-staging.net
+
+      - target: kubernetes
+        domains:
+          BACK_OFFICE_URL: http://back.mydomain-staging.net
+          STATIC_FILES_URL: http://static.mydomain-staging.net
+          FRENCH_SITE_URL: http://front-fr.mydomain-staging.net
+          SPANISH_SITE_URL: http://front-es.mydomain-staging.net
+
+    server:
+      - type: swarm
+        host: ssh://perso.swarm-dev
+
+    secret_files:
+      MYAPP_SECRETS: deploy/swarm/staging/mydomain.sh
+      POSTGRES_PASSWORD: deploy/swarm/staging/postgres_password.sh
+
+    setup_commands:
+      - target: all
+        service: crono
+        command:
+          - bash
+          - -l
+          - -c
+          - bin/rails myapp:db:setup
+
+  - name: production
+    domains:
+      - target:
+          - compose
+          - swarm
+        domains:
+          BACK_OFFICE_URL: https://back.mydomain-production.net
+          STATIC_FILES_URL: https://static.mydomain-production.net
+          FRENCH_SITE_URL: https://front-fr.mydomain-production.net
+          SPANISH_SITE_URL: https://front-es.mydomain-production.net
+
+      - target: kubernetes
+        domains:
+          BACK_OFFICE_URL: http://back.mydomain-production.net
+          STATIC_FILES_URL: http://static.mydomain-production.net
+          FRENCH_SITE_URL: http://front-fr.mydomain-production.net
+          SPANISH_SITE_URL: http://front-es.mydomain-production.net
+
+    server:
+      - type: swarm
+        host: ssh://perso.swarm-dev
+
+    secret_files:
+      MYAPP_SECRETS: deploy/swarm/production/mydomain.sh
+      POSTGRES_PASSWORD: deploy/swarm/production/postgres_password.sh
+
+    setup_commands:
+      - target: all
+        service: crono
+        command:
+          - bash
+          - -l
+          - -c
+          - bin/rails myapp:db:setup

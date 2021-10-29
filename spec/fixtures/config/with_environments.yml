@@ -1,0 +1,6 @@
+---
+environments:
+  - name: all
+  - name: development
+  - name: staging
+  - name: production
