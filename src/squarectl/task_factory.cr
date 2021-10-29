@@ -1,6 +1,42 @@
 module Squarectl
   # :nodoc:
   class TaskFactory
+    macro define_method_hash(name, klass, default_key, default_value, accessor, method)
+      def self.{{name.id}}(target, environment, all)
+        all_objects = all.nil? ? [] of {{klass}} : all.{{accessor}}
+        env_objects = environment.{{accessor}}
+
+        all_objects = all_objects.select { |e| find_matching_target(e, target) }
+        env_objects = env_objects.select { |e| find_matching_target(e, target) }
+
+        all_objects = all_objects.empty? ? {} of {{default_key}} => {{default_value}} : all_objects.map(&.{{method}}).reduce({} of {{default_key}} => {{default_value}}) { |memo, i| memo.merge(i) }
+        env_objects = env_objects.empty? ? {} of {{default_key}} => {{default_value}} : env_objects.map(&.{{method}}).reduce({} of {{default_key}} => {{default_value}}) { |memo, i| memo.merge(i) }
+
+        all_objects.merge(env_objects)
+      end
+    end
+
+    macro define_method_array(name, klass, default_value, accessor, method)
+      def self.{{name.id}}(target, environment, all)
+
+        all_objects = all.nil? ? [] of {{klass}} : all.{{accessor}}
+        env_objects = environment.{{accessor}}
+
+        all_objects = all_objects.select { |e| find_matching_target(e, target) }
+        env_objects = env_objects.select { |e| find_matching_target(e, target) }
+
+        all_objects = all_objects.empty? ? [] of {{default_value}} : all_objects.map(&.{{method}}).reduce([] of {{default_value}}) { |memo, i| memo + i }
+        env_objects = env_objects.empty? ? [] of {{default_value}} : env_objects.map(&.{{method}}).reduce([] of {{default_value}}) { |memo, i| memo + i }
+
+        all_objects + env_objects
+      end
+    end
+
+    define_method_hash :_build_task_env_vars, Squarectl::Config::EnvVar, String, String, env_vars, vars
+    define_method_array :_build_task_compose_files, Squarectl::Config::ComposeFile, String, compose_files, files
+    define_method_array :_build_task_compose_networks, Squarectl::Config::Network, String, networks, networks
+    define_method_array :_build_task_ssl_certificates, Squarectl::Config::SSLCertificate, Squarectl::Config::SSLCertificateSpec, ssl_certificates, ssl_certificates
+
     def self.build(target, environment, all)
       env_vars = build_task_env_vars(target, environment, all)
       domains = build_task_domains(target, environment, all)
@@ -17,16 +53,7 @@ module Squarectl
     end
 
     def self.build_task_env_vars(target, environment, all)
-      all_env_vars = all.nil? ? [] of Squarectl::Config::EnvVar : all.env_vars
-      env_env_vars = environment.env_vars
-
-      all_env_vars = all_env_vars.select { |e| find_matching_target(e, target) }
-      env_env_vars = env_env_vars.select { |e| find_matching_target(e, target) }
-
-      all_env_vars = all_env_vars.empty? ? {} of String => String : all_env_vars.map { |e| e.vars }.reduce({} of String => String) { |memo, i| memo.merge(i) }
-      env_env_vars = env_env_vars.empty? ? {} of String => String : env_env_vars.map { |e| e.vars }.reduce({} of String => String) { |memo, i| memo.merge(i) }
-
-      all_env_vars.merge(env_env_vars)
+      _build_task_env_vars(target, environment, all)
     end
 
     def self.build_task_domains(target, environment, all)
@@ -43,46 +70,19 @@ module Squarectl
     end
 
     def self.build_task_compose_files(target, environment, all)
-      all_compose_files = all.nil? ? [] of Squarectl::Config::ComposeFile : all.compose_files
-      env_compose_files = environment.compose_files
-
-      all_compose_files = all_compose_files.select { |e| find_matching_target(e, target) }
-      env_compose_files = env_compose_files.select { |e| find_matching_target(e, target) }
-
-      all_compose_files = all_compose_files.empty? ? [] of String : all_compose_files.map(&.files).reduce([] of String) { |memo, i| memo + i }
-      env_compose_files = env_compose_files.empty? ? [] of String : env_compose_files.map(&.files).reduce([] of String) { |memo, i| memo + i }
-
-      all_compose_files = all_compose_files.map { |f| Squarectl.targets_common_dir.join(f) }
-      env_compose_files = env_compose_files.map { |f| Squarectl.targets_common_dir.join(f) }
-
+      result = _build_task_compose_files(target, environment, all)
+      result = result.map { |f| Squarectl.targets_common_dir.join(f) }
       base_compose_files = [environment.compose_file_base_for(target), environment.compose_file_common_for(target), environment.compose_file_env_for(target)]
-      (base_compose_files + all_compose_files + env_compose_files).map(&.to_s)
+      (base_compose_files + result).map(&.to_s)
     end
 
     def self.build_task_compose_networks(target, environment, all)
-      all_compose_networks = all.nil? ? [] of Squarectl::Config::Network : all.networks
-      env_compose_networks = environment.networks
-
-      all_compose_networks = all_compose_networks.select { |e| find_matching_target(e, target) }
-      env_compose_networks = env_compose_networks.select { |e| find_matching_target(e, target) }
-
-      all_compose_networks = all_compose_networks.empty? ? [] of String : all_compose_networks.map(&.networks).reduce([] of String) { |memo, i| memo + i }
-      env_compose_networks = env_compose_networks.empty? ? [] of String : env_compose_networks.map(&.networks).reduce([] of String) { |memo, i| memo + i }
-
-      all_compose_networks + env_compose_networks
+      _build_task_compose_networks(target, environment, all)
     end
 
     def self.build_task_ssl_certificates(target, environment, all)
-      all_ssl_certificates = all.nil? ? [] of Squarectl::Config::SSLCertificate : all.ssl_certificates
-      env_ssl_certificates = environment.ssl_certificates
-
-      all_ssl_certificates = all_ssl_certificates.select { |e| find_matching_target(e, target) }
-      env_ssl_certificates = env_ssl_certificates.select { |e| find_matching_target(e, target) }
-
-      all_ssl_certificates = all_ssl_certificates.empty? ? [] of Squarectl::Config::SSLCertificateSpec : all_ssl_certificates.map(&.ssl_certificates).reduce([] of Squarectl::Config::SSLCertificateSpec) { |memo, i| memo + i }
-      env_ssl_certificates = env_ssl_certificates.empty? ? [] of Squarectl::Config::SSLCertificateSpec : env_ssl_certificates.map(&.ssl_certificates).reduce([] of Squarectl::Config::SSLCertificateSpec) { |memo, i| memo + i }
-
-      (all_ssl_certificates + env_ssl_certificates).map(&.to_h(environment))
+      result = _build_task_ssl_certificates(target, environment, all)
+      result.map(&.to_h(environment))
     end
 
     def self.build_task_setup_commands(target, environment, all)
