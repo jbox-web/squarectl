@@ -49,8 +49,8 @@ module Squarectl
       all_compose_files = all_compose_files.select { |e| find_matching_target(e, target) }
       env_compose_files = env_compose_files.select { |e| find_matching_target(e, target) }
 
-      all_compose_files = all_compose_files.empty? ? [] of String : all_compose_files.first.files
-      env_compose_files = env_compose_files.empty? ? [] of String : env_compose_files.first.files
+      all_compose_files = all_compose_files.empty? ? [] of String : all_compose_files.map(&.files).reduce([] of String) { |memo, i| memo + i }
+      env_compose_files = env_compose_files.empty? ? [] of String : env_compose_files.map(&.files).reduce([] of String) { |memo, i| memo + i }
 
       all_compose_files = all_compose_files.map { |f| Squarectl.targets_common_dir.join(f) }
       env_compose_files = env_compose_files.map { |f| Squarectl.targets_common_dir.join(f) }
