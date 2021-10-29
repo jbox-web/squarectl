@@ -35,6 +35,16 @@ module TestHelper
       "#{root_dir}/squarectl/targets/common/#{environment}_only_all_targets.yml",
     ]
   end
+
+  def test_global_setup_commands
+    expect(task).to be_a(Squarectl::Task)
+    expect(task.squarectl_environment["SQUARECTL_SETUP_COMMANDS"]).to eq [
+      {"service" => "#{target}_all_only", "command" => ["foo"]},
+      {"service" => "all_targets", "command" => ["foo"]},
+      {"service" => "#{target}_#{environment}_only", "command" => ["foo"]},
+      {"service" => "#{environment}_only_all_targets", "command" => ["foo"]},
+    ]
+  end
 end
 
 Spectator.describe Squarectl::TaskFactory do
@@ -310,6 +320,66 @@ Spectator.describe Squarectl::TaskFactory do
         let(environment) { "production" }
 
         it "returns a built Task object" { test_global_compose_files }
+      end
+    end
+  end
+
+  context "with global setup commands" do
+    before_each { Squarectl.load_config(config_file) }
+
+    let(config_file) { "spec/fixtures/config/with_global_setup_commands.yml" }
+
+    context "when target is compose" do
+      let(target) { "compose" }
+
+      context "when environment is development" do
+        let(environment) { "development" }
+
+        it "returns a built Task object" { test_global_setup_commands }
+      end
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_setup_commands }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_setup_commands }
+      end
+    end
+
+    context "when target is swarm" do
+      let(target) { "swarm" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_setup_commands }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_setup_commands }
+      end
+    end
+
+    context "when target is kubernetes" do
+      let(target) { "kubernetes" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_setup_commands }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_setup_commands }
       end
     end
   end
