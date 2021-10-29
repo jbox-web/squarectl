@@ -66,8 +66,8 @@ module Squarectl
       all_compose_networks = all_compose_networks.select { |e| find_matching_target(e, target) }
       env_compose_networks = env_compose_networks.select { |e| find_matching_target(e, target) }
 
-      all_compose_networks = all_compose_networks.empty? ? [] of String : all_compose_networks.first.networks
-      env_compose_networks = env_compose_networks.empty? ? [] of String : env_compose_networks.first.networks
+      all_compose_networks = all_compose_networks.empty? ? [] of String : all_compose_networks.map(&.networks).reduce([] of String) { |memo, i| memo + i }
+      env_compose_networks = env_compose_networks.empty? ? [] of String : env_compose_networks.map(&.networks).reduce([] of String) { |memo, i| memo + i }
 
       all_compose_networks + env_compose_networks
     end

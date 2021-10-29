@@ -174,4 +174,85 @@ Spectator.describe Squarectl::TaskFactory do
       end
     end
   end
+
+  context "with global networks" do
+    before_each { Squarectl.load_config(config_file) }
+
+    let(config_file) { "spec/fixtures/config/with_global_networks.yml" }
+
+    context "when target is compose" do
+      let(target) { "compose" }
+
+      context "when environment is development" do
+        let(environment) { "development" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["COMPOSE_ALL_ONLY", "ALL_TARGETS", "COMPOSE_DEVELOPMENT_ONLY", "DEVELOPMENT_ONLY_ALL_TARGETS"]
+        end
+      end
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["COMPOSE_ALL_ONLY", "ALL_TARGETS", "COMPOSE_STAGING_ONLY", "STAGING_ONLY_ALL_TARGETS"]
+        end
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["COMPOSE_ALL_ONLY", "ALL_TARGETS", "COMPOSE_PRODUCTION_ONLY", "PRODUCTION_ONLY_ALL_TARGETS"]
+        end
+      end
+    end
+
+    context "when target is swarm" do
+      let(target) { "swarm" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["SWARM_ALL_ONLY", "ALL_TARGETS", "SWARM_STAGING_ONLY", "STAGING_ONLY_ALL_TARGETS"]
+        end
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["SWARM_ALL_ONLY", "ALL_TARGETS", "SWARM_PRODUCTION_ONLY", "PRODUCTION_ONLY_ALL_TARGETS"]
+        end
+      end
+    end
+
+    context "when target is kubernetes" do
+      let(target) { "kubernetes" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["KUBERNETES_ALL_ONLY", "ALL_TARGETS", "KUBERNETES_STAGING_ONLY", "STAGING_ONLY_ALL_TARGETS"]
+        end
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" do
+          expect(task).to be_a(Squarectl::Task)
+          expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq ["KUBERNETES_ALL_ONLY", "ALL_TARGETS", "KUBERNETES_PRODUCTION_ONLY", "PRODUCTION_ONLY_ALL_TARGETS"]
+        end
+      end
+    end
+  end
 end
