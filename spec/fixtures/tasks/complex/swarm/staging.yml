@@ -3,10 +3,10 @@ SQUARECTL_APP: myapp
 SQUARECTL_ENV: staging
 SQUARECTL_TARGET: swarm
 SQUARECTL_TARGET_SERVER: ssh://perso.swarm-dev
-SQUARECTL_CWD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr
-SQUARECTL_DATA_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl
-SQUARECTL_TARGETS_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets
-SQUARECTL_TARGETS_COMMON_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common
+SQUARECTL_CWD: {{ current_dir }}
+SQUARECTL_DATA_DIR: {{ current_dir }}/squarectl
+SQUARECTL_TARGETS_DIR: {{ current_dir }}/squarectl/targets
+SQUARECTL_TARGETS_COMMON_DIR: {{ current_dir }}/squarectl/targets/common
 SQUARECTL_ENV_VARS:
   MYAPP_RELEASE: 1.0.0
 SQUARECTL_DOMAINS:
@@ -23,10 +23,10 @@ SQUARECTL_DOMAINS:
   SPANISH_SITE_DOMAIN: front-es.mydomain-staging.net
   SPANISH_SITE_SCHEME: https
 SQUARECTL_FILES:
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/base.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/swarm/common.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/swarm/staging.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/networks.yml
+- {{ current_dir }}/squarectl/base.yml
+- {{ current_dir }}/squarectl/targets/swarm/common.yml
+- {{ current_dir }}/squarectl/targets/swarm/staging.yml
+- {{ current_dir }}/squarectl/targets/common/networks.yml
 SQUARECTL_NETWORKS: []
 SQUARECTL_SSL_CERTIFICATES: []
 SQUARECTL_SETUP_COMMANDS:
@@ -38,5 +38,5 @@ SQUARECTL_SETUP_COMMANDS:
   - bin/rails myapp:db:setup
 SQUARECTL_CONFIG_FILES: {}
 SQUARECTL_SECRET_FILES:
-  myapp-stag__MYAPP_SECRETS: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/staging/mydomain.sh
-  myapp-stag__POSTGRES_PASSWORD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/staging/postgres_password.sh
+  myapp-stag__MYAPP_SECRETS: {{ current_dir }}/deploy/swarm/staging/mydomain.sh
+  myapp-stag__POSTGRES_PASSWORD: {{ current_dir }}/deploy/swarm/staging/postgres_password.sh

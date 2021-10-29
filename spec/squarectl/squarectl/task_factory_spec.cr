@@ -7,6 +7,11 @@ Spectator.describe Squarectl::TaskFactory do
 
   let(environment_object) { Squarectl.find_environment(environment: environment, target: target) }
   let(task) { Squarectl::TaskFactory.build(target, environment_object, Squarectl.environment_all) }
+  let(fixture_file) { File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml") }
+
+  def render_crinja(str)
+    Crinja.render(str, {"current_dir" => Dir.current}) + "\n"
+  end
 
   context "with complex config" do
     before_each { Squarectl.load_config(config_file) }
@@ -21,7 +26,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
 
@@ -30,7 +35,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
 
@@ -39,7 +44,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
     end
@@ -52,7 +57,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
 
@@ -61,7 +66,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
     end
@@ -74,7 +79,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
 
@@ -83,7 +88,7 @@ Spectator.describe Squarectl::TaskFactory do
 
         it "returns a built Task object" do
           expect(task).to be_a(Squarectl::Task)
-          expect(task.squarectl_environment.to_yaml).to eq(File.read("spec/fixtures/tasks/complex/#{target}/#{environment}.yml"))
+          expect(task.squarectl_environment.to_yaml).to eq render_crinja(fixture_file)
         end
       end
     end

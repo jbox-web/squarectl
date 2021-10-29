@@ -3,10 +3,10 @@ SQUARECTL_APP: myapp
 SQUARECTL_ENV: staging
 SQUARECTL_TARGET: compose
 SQUARECTL_TARGET_SERVER: ""
-SQUARECTL_CWD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr
-SQUARECTL_DATA_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl
-SQUARECTL_TARGETS_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets
-SQUARECTL_TARGETS_COMMON_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common
+SQUARECTL_CWD: {{ current_dir }}
+SQUARECTL_DATA_DIR: {{ current_dir }}/squarectl
+SQUARECTL_TARGETS_DIR: {{ current_dir }}/squarectl/targets
+SQUARECTL_TARGETS_COMMON_DIR: {{ current_dir }}/squarectl/targets/common
 SQUARECTL_ENV_VARS:
   TRAEFIK_DOMAIN: traefik.mydomain.local
   GRAFANA_DOMAIN: grafana.mydomain.local
@@ -25,12 +25,12 @@ SQUARECTL_DOMAINS:
   SPANISH_SITE_DOMAIN: front-es.mydomain-staging.net
   SPANISH_SITE_SCHEME: https
 SQUARECTL_FILES:
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/base.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/compose/common.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/compose/staging.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/monitoring.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/debug.yml
-- /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common/networks.yml
+- {{ current_dir }}/squarectl/base.yml
+- {{ current_dir }}/squarectl/targets/compose/common.yml
+- {{ current_dir }}/squarectl/targets/compose/staging.yml
+- {{ current_dir }}/squarectl/targets/common/monitoring.yml
+- {{ current_dir }}/squarectl/targets/common/debug.yml
+- {{ current_dir }}/squarectl/targets/common/networks.yml
 SQUARECTL_NETWORKS:
 - traefik-public
 SQUARECTL_SSL_CERTIFICATES: []
@@ -43,5 +43,5 @@ SQUARECTL_SETUP_COMMANDS:
   - bin/rails myapp:db:setup
 SQUARECTL_CONFIG_FILES: {}
 SQUARECTL_SECRET_FILES:
-  myapp-stag__MYAPP_SECRETS: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/staging/mydomain.sh
-  myapp-stag__POSTGRES_PASSWORD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/deploy/swarm/staging/postgres_password.sh
+  myapp-stag__MYAPP_SECRETS: {{ current_dir }}/deploy/swarm/staging/mydomain.sh
+  myapp-stag__POSTGRES_PASSWORD: {{ current_dir }}/deploy/swarm/staging/postgres_password.sh
