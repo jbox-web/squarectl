@@ -13,6 +13,12 @@ environments:
           GRAFANA_DOMAIN: grafana.mydomain.local
           PROMETHEUS_DOMAIN: prometheus.mydomain.local
 
+      - target:
+          - swarm
+          - kubernetes
+        vars:
+          MYAPP_RELEASE: "{{ ENV['MYAPP_RELEASE'] }}"
+
     compose_files:
       - target: compose
         files:

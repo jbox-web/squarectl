@@ -8,6 +8,7 @@ require "uri"
 require "crystal-env/core"
 require "admiral"
 require "baked_file_system"
+require "crinja"
 
 # Set environment
 Crystal::Env.default("development")
@@ -26,7 +27,8 @@ module Squarectl
 
   def self.load_config(config_path)
     config_file = File.read(config_path)
-    self.config = Squarectl::Config::SquarectlConfig.from_yaml(config_file)
+    rendered = Crinja.render(config_file, {"ENV" => env_vars_to_hash})
+    self.config = Squarectl::Config::SquarectlConfig.from_yaml(rendered)
     self.environments = config.environments
   end
 
@@ -34,6 +36,12 @@ module Squarectl
     @@config = nil
     @@environments = nil
     @@environment_all = nil
+  end
+
+  def self.env_vars_to_hash
+    hash = Hash(String, String).new
+    ENV.each { |k, v| hash[k] = v }
+    hash
   end
 
   private def self.config=(config : Squarectl::Config::SquarectlConfig)

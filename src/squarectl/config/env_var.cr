@@ -5,7 +5,7 @@ module Squarectl
       include JSON::Serializable
       include YAML::Serializable
 
-      property target : String = "compose"
+      property target : String | Array(String) = "compose"
       property vars : Hash(String, String) = {} of String => String
     end
   end

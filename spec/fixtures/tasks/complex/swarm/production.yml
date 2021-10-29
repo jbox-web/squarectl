@@ -7,7 +7,8 @@ SQUARECTL_CWD: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr
 SQUARECTL_DATA_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl
 SQUARECTL_TARGETS_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets
 SQUARECTL_TARGETS_COMMON_DIR: /home/nicolas/PROJECTS/CRYSTAL/squarectl.cr/squarectl/targets/common
-SQUARECTL_ENV_VARS: {}
+SQUARECTL_ENV_VARS:
+  MYAPP_RELEASE: 1.0.0
 SQUARECTL_DOMAINS:
   BACK_OFFICE_URL: https://back.mydomain-production.net
   STATIC_FILES_URL: https://static.mydomain-production.net

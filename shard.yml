@@ -22,6 +22,8 @@ dependencies:
   crystal-env:
     github: crystal-lang/crystal-env
     branch: master
+  crinja:
+    github: straight-shoota/crinja
 
 development_dependencies:
   spectator:

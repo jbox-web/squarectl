@@ -1,6 +1,8 @@
 require "../../spec_helper.cr"
 
 Spectator.describe Squarectl::TaskFactory do
+  before_each { ENV["MYAPP_RELEASE"] = "1.0.0" }
+  after_each { ENV.delete("MYAPP_RELEASE") }
   after_each { Squarectl.reset_config! }
 
   let(environment_object) { Squarectl.find_environment(environment: environment, target: target) }
