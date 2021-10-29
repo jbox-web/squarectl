@@ -1,0 +1,118 @@
+---
+environments:
+
+  - name: all
+    ssl_certificates:
+      - target: compose
+        ssl_certificates:
+          - domain: compose_all_env.local
+            cert_path: deploy/ssl/compose/all_env.crt
+            key_path: deploy/ssl/compose/all_env.key
+
+      - target: swarm
+        ssl_certificates:
+          - domain: swarm_all_env.local
+            cert_path: deploy/ssl/swarm/all_env.crt
+            key_path: deploy/ssl/swarm/all_env.key
+
+      - target: kubernetes
+        ssl_certificates:
+          - domain: kubernetes_all_env.local
+            cert_path: deploy/ssl/kubernetes/all_env.crt
+            key_path: deploy/ssl/kubernetes/all_env.key
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        ssl_certificates:
+          - domain: all_env_all_targets.local
+            cert_path: deploy/ssl/all_env_all_targets.crt
+            key_path: deploy/ssl/all_env_all_targets.key
+
+  - name: development
+    ssl_certificates:
+      - target: compose
+        ssl_certificates:
+          - domain: compose_development_only.local
+            cert_path: deploy/ssl/compose/development_only.crt
+            key_path: deploy/ssl/compose/development_only.key
+
+      - target: swarm
+        ssl_certificates:
+          - domain: swarm_development_only.local
+            cert_path: deploy/ssl/swarm/development_only.crt
+            key_path: deploy/ssl/swarm/development_only.key
+
+      - target: kubernetes
+        ssl_certificates:
+          - domain: kubernetes_development_only.local
+            cert_path: deploy/ssl/kubernetes/development_only.crt
+            key_path: deploy/ssl/kubernetes/development_only.key
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        ssl_certificates:
+          - domain: development_only_all_targets.local
+            cert_path: deploy/ssl/development/all_targets.crt
+            key_path: deploy/ssl/development/all_targets.key
+
+  - name: staging
+    ssl_certificates:
+      - target: compose
+        ssl_certificates:
+          - domain: compose_staging_only.local
+            cert_path: deploy/ssl/compose/staging_only.crt
+            key_path: deploy/ssl/compose/staging_only.key
+
+      - target: swarm
+        ssl_certificates:
+          - domain: swarm_staging_only.local
+            cert_path: deploy/ssl/swarm/staging_only.crt
+            key_path: deploy/ssl/swarm/staging_only.key
+
+      - target: kubernetes
+        ssl_certificates:
+          - domain: kubernetes_staging_only.local
+            cert_path: deploy/ssl/kubernetes/staging_only.crt
+            key_path: deploy/ssl/kubernetes/staging_only.key
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        ssl_certificates:
+          - domain: staging_only_all_targets.local
+            cert_path: deploy/ssl/staging/all_targets.crt
+            key_path: deploy/ssl/staging/all_targets.key
+
+  - name: production
+    ssl_certificates:
+      - target: compose
+        ssl_certificates:
+          - domain: compose_production_only.local
+            cert_path: deploy/ssl/compose/production_only.crt
+            key_path: deploy/ssl/compose/production_only.key
+
+      - target: swarm
+        ssl_certificates:
+          - domain: swarm_production_only.local
+            cert_path: deploy/ssl/swarm/production_only.crt
+            key_path: deploy/ssl/swarm/production_only.key
+
+      - target: kubernetes
+        ssl_certificates:
+          - domain: kubernetes_production_only.local
+            cert_path: deploy/ssl/kubernetes/production_only.crt
+            key_path: deploy/ssl/kubernetes/production_only.key
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        ssl_certificates:
+          - domain: production_only_all_targets.local
+            cert_path: deploy/ssl/production/all_targets.crt
+            key_path: deploy/ssl/production/all_targets.key

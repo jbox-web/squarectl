@@ -79,8 +79,8 @@ module Squarectl
       all_ssl_certificates = all_ssl_certificates.select { |e| find_matching_target(e, target) }
       env_ssl_certificates = env_ssl_certificates.select { |e| find_matching_target(e, target) }
 
-      all_ssl_certificates = all_ssl_certificates.empty? ? [] of Squarectl::Config::SSLCertificateSpec : all_ssl_certificates.first.ssl_certificates
-      env_ssl_certificates = env_ssl_certificates.empty? ? [] of Squarectl::Config::SSLCertificateSpec : env_ssl_certificates.first.ssl_certificates
+      all_ssl_certificates = all_ssl_certificates.empty? ? [] of Squarectl::Config::SSLCertificateSpec : all_ssl_certificates.map(&.ssl_certificates).reduce([] of Squarectl::Config::SSLCertificateSpec) { |memo, i| memo + i }
+      env_ssl_certificates = env_ssl_certificates.empty? ? [] of Squarectl::Config::SSLCertificateSpec : env_ssl_certificates.map(&.ssl_certificates).reduce([] of Squarectl::Config::SSLCertificateSpec) { |memo, i| memo + i }
 
       (all_ssl_certificates + env_ssl_certificates).map(&.to_h(environment))
     end

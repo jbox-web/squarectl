@@ -45,6 +45,16 @@ module TestHelper
       {"service" => "#{environment}_only_all_targets", "command" => ["foo"]},
     ]
   end
+
+  def test_global_ssl_certificates
+    expect(task).to be_a(Squarectl::Task)
+    expect(task.squarectl_environment["SQUARECTL_SSL_CERTIFICATES"]).to eq [
+      {"domain" => "#{target}_all_env.local", "cert_path" => "#{root_dir}/deploy/ssl/#{target}/all_env.crt", "key_path" => "#{root_dir}/deploy/ssl/#{target}/all_env.key"},
+      {"domain" => "all_env_all_targets.local", "cert_path" => "#{root_dir}/deploy/ssl/all_env_all_targets.crt", "key_path" => "#{root_dir}/deploy/ssl/all_env_all_targets.key"},
+      {"domain" => "#{target}_#{environment}_only.local", "cert_path" => "#{root_dir}/deploy/ssl/#{target}/#{environment}_only.crt", "key_path" => "#{root_dir}/deploy/ssl/#{target}/#{environment}_only.key"},
+      {"domain" => "#{environment}_only_all_targets.local", "cert_path" => "#{root_dir}/deploy/ssl/#{environment}/all_targets.crt", "key_path" => "#{root_dir}/deploy/ssl/#{environment}/all_targets.key"},
+    ]
+  end
 end
 
 Spectator.describe Squarectl::TaskFactory do
@@ -380,6 +390,66 @@ Spectator.describe Squarectl::TaskFactory do
         let(environment) { "production" }
 
         it "returns a built Task object" { test_global_setup_commands }
+      end
+    end
+  end
+
+  context "with global ssl certificates" do
+    before_each { Squarectl.load_config(config_file) }
+
+    let(config_file) { "spec/fixtures/config/with_global_ssl_certificates.yml" }
+
+    context "when target is compose" do
+      let(target) { "compose" }
+
+      context "when environment is development" do
+        let(environment) { "development" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
+      end
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
+      end
+    end
+
+    context "when target is swarm" do
+      let(target) { "swarm" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
+      end
+    end
+
+    context "when target is kubernetes" do
+      let(target) { "kubernetes" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_ssl_certificates }
       end
     end
   end
