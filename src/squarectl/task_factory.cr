@@ -33,6 +33,7 @@ module Squarectl
     end
 
     define_method_hash :_build_task_env_vars, Squarectl::Config::EnvVar, String, String, env_vars, vars
+    define_method_hash :_build_task_domains, Squarectl::Config::Domain, String, String, domains, domains
     define_method_array :_build_task_compose_files, Squarectl::Config::ComposeFile, String, compose_files, files
     define_method_array :_build_task_compose_networks, Squarectl::Config::Network, String, networks, networks
     define_method_array :_build_task_ssl_certificates, Squarectl::Config::SSLCertificate, Squarectl::Config::SSLCertificateSpec, ssl_certificates, ssl_certificates
@@ -57,16 +58,8 @@ module Squarectl
     end
 
     def self.build_task_domains(target, environment, all)
-      all_domains = all.nil? ? [] of Squarectl::Config::Domain : all.domains
-      env_domains = environment.domains
-
-      all_domains = all_domains.select { |e| find_matching_target(e, target) }
-      env_domains = env_domains.select { |e| find_matching_target(e, target) }
-
-      all_domains = all_domains.empty? ? {} of String => String : all_domains.first.domains
-      env_domains = env_domains.empty? ? {} of String => String : env_domains.first.domains
-
-      decompose_urls(all_domains.merge(env_domains))
+      result = _build_task_domains(target, environment, all)
+      decompose_urls(result)
     end
 
     def self.build_task_compose_files(target, environment, all)

@@ -13,6 +13,26 @@ module TestHelper
     )
   end
 
+  def test_global_domains
+    expect(task).to be_a(Squarectl::Task)
+    expect(task.squarectl_environment["SQUARECTL_DOMAINS"]).to eq(
+      {
+        "#{target.upcase}_ALL_ONLY_URL"                      => "http://#{target}_all_only.local",
+        "ALL_TARGETS_URL"                                    => "http://all_targets.local",
+        "#{target.upcase}_#{environment.upcase}_ONLY_URL"    => "http://#{target}_#{environment}_only.local",
+        "#{environment.upcase}_ONLY_ALL_TARGETS_URL"         => "http://#{environment}_only_all_targets.local",
+        "#{target.upcase}_ALL_ONLY_DOMAIN"                   => "#{target}_all_only.local",
+        "#{target.upcase}_ALL_ONLY_SCHEME"                   => "http",
+        "ALL_TARGETS_DOMAIN"                                 => "all_targets.local",
+        "ALL_TARGETS_SCHEME"                                 => "http",
+        "#{target.upcase}_#{environment.upcase}_ONLY_DOMAIN" => "#{target}_#{environment}_only.local",
+        "#{target.upcase}_#{environment.upcase}_ONLY_SCHEME" => "http",
+        "#{environment.upcase}_ONLY_ALL_TARGETS_DOMAIN"      => "#{environment}_only_all_targets.local",
+        "#{environment.upcase}_ONLY_ALL_TARGETS_SCHEME"      => "http",
+      }
+    )
+  end
+
   def test_global_networks
     expect(task).to be_a(Squarectl::Task)
     expect(task.squarectl_environment["SQUARECTL_NETWORKS"]).to eq [
@@ -210,6 +230,66 @@ Spectator.describe Squarectl::TaskFactory do
         let(environment) { "production" }
 
         it "returns a built Task object" { test_global_env_vars }
+      end
+    end
+  end
+
+  context "with global domains" do
+    before_each { Squarectl.load_config(config_file) }
+
+    let(config_file) { "spec/fixtures/config/with_global_domains.yml" }
+
+    context "when target is compose" do
+      let(target) { "compose" }
+
+      context "when environment is development" do
+        let(environment) { "development" }
+
+        it "returns a built Task object" { test_global_domains }
+      end
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_domains }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_domains }
+      end
+    end
+
+    context "when target is swarm" do
+      let(target) { "swarm" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_domains }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_domains }
+      end
+    end
+
+    context "when target is kubernetes" do
+      let(target) { "kubernetes" }
+
+      context "when environment is staging" do
+        let(environment) { "staging" }
+
+        it "returns a built Task object" { test_global_domains }
+      end
+
+      context "when environment is production" do
+        let(environment) { "production" }
+
+        it "returns a built Task object" { test_global_domains }
       end
     end
   end
