@@ -23,8 +23,8 @@ module Squarectl
       all_env_vars = all_env_vars.select { |e| find_matching_target(e, target) }
       env_env_vars = env_env_vars.select { |e| find_matching_target(e, target) }
 
-      all_env_vars = all_env_vars.empty? ? {} of String => String : all_env_vars.first.vars
-      env_env_vars = env_env_vars.empty? ? {} of String => String : env_env_vars.first.vars
+      all_env_vars = all_env_vars.empty? ? {} of String => String : all_env_vars.map { |e| e.vars }.reduce({} of String => String) { |memo, i| memo.merge(i) }
+      env_env_vars = env_env_vars.empty? ? {} of String => String : env_env_vars.map { |e| e.vars }.reduce({} of String => String) { |memo, i| memo.merge(i) }
 
       all_env_vars.merge(env_env_vars)
     end
