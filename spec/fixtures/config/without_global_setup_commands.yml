@@ -1,0 +1,77 @@
+---
+environments:
+
+  - name: development
+    setup_commands:
+      - target: compose
+        service: compose_development_only
+        command:
+          - foo
+
+      - target: swarm
+        service: swarm_development_only
+        command:
+          - foo
+
+      - target: kubernetes
+        service: kubernetes_development_only
+        command:
+          - foo
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        service: development_only_all_targets
+        command:
+          - foo
+
+  - name: staging
+    setup_commands:
+      - target: compose
+        service: compose_staging_only
+        command:
+          - foo
+
+      - target: swarm
+        service: swarm_staging_only
+        command:
+          - foo
+
+      - target: kubernetes
+        service: kubernetes_staging_only
+        command:
+          - foo
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        service: staging_only_all_targets
+        command:
+          - foo
+
+  - name: production
+    setup_commands:
+      - target: compose
+        service: compose_production_only
+        command:
+          - foo
+
+      - target: swarm
+        service: swarm_production_only
+        command:
+          - foo
+
+      - target: kubernetes
+        service: kubernetes_production_only
+        command:
+          - foo
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        service: production_only_all_targets
+        command:
+          - foo

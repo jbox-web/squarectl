@@ -1,0 +1,65 @@
+---
+environments:
+
+  - name: development
+    networks:
+      - target: compose
+        networks:
+          - compose_development_only
+
+      - target: swarm
+        networks:
+          - swarm_development_only
+
+      - target: kubernetes
+        networks:
+          - kubernetes_development_only
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        networks:
+          - development_only_all_targets
+
+  - name: staging
+    networks:
+      - target: compose
+        networks:
+          - compose_staging_only
+
+      - target: swarm
+        networks:
+          - swarm_staging_only
+
+      - target: kubernetes
+        networks:
+          - kubernetes_staging_only
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        networks:
+          - staging_only_all_targets
+
+  - name: production
+    networks:
+      - target: compose
+        networks:
+          - compose_production_only
+
+      - target: swarm
+        networks:
+          - swarm_production_only
+
+      - target: kubernetes
+        networks:
+          - kubernetes_production_only
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        networks:
+          - production_only_all_targets

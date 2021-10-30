@@ -1,0 +1,65 @@
+---
+environments:
+
+  - name: development
+    env_vars:
+      - target: compose
+        vars:
+          COMPOSE_DEVELOPMENT_ONLY: 'true'
+
+      - target: swarm
+        vars:
+          SWARM_DEVELOPMENT_ONLY: 'true'
+
+      - target: kubernetes
+        vars:
+          KUBERNETES_DEVELOPMENT_ONLY: 'true'
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        vars:
+          DEVELOPMENT_ONLY_ALL_TARGETS: 'true'
+
+  - name: staging
+    env_vars:
+      - target: compose
+        vars:
+          COMPOSE_STAGING_ONLY: 'true'
+
+      - target: swarm
+        vars:
+          SWARM_STAGING_ONLY: 'true'
+
+      - target: kubernetes
+        vars:
+          KUBERNETES_STAGING_ONLY: 'true'
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        vars:
+          STAGING_ONLY_ALL_TARGETS: 'true'
+
+  - name: production
+    env_vars:
+      - target: compose
+        vars:
+          COMPOSE_PRODUCTION_ONLY: 'true'
+
+      - target: swarm
+        vars:
+          SWARM_PRODUCTION_ONLY: 'true'
+
+      - target: kubernetes
+        vars:
+          KUBERNETES_PRODUCTION_ONLY: 'true'
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        vars:
+          PRODUCTION_ONLY_ALL_TARGETS: 'true'

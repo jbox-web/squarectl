@@ -1,0 +1,65 @@
+---
+environments:
+
+  - name: development
+    compose_files:
+      - target: compose
+        files:
+          - compose_development_only.yml
+
+      - target: swarm
+        files:
+          - swarm_development_only.yml
+
+      - target: kubernetes
+        files:
+          - kubernetes_development_only.yml
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        files:
+          - development_only_all_targets.yml
+
+  - name: staging
+    compose_files:
+      - target: compose
+        files:
+          - compose_staging_only.yml
+
+      - target: swarm
+        files:
+          - swarm_staging_only.yml
+
+      - target: kubernetes
+        files:
+          - kubernetes_staging_only.yml
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        files:
+          - staging_only_all_targets.yml
+
+  - name: production
+    compose_files:
+      - target: compose
+        files:
+          - compose_production_only.yml
+
+      - target: swarm
+        files:
+          - swarm_production_only.yml
+
+      - target: kubernetes
+        files:
+          - kubernetes_production_only.yml
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        files:
+          - production_only_all_targets.yml

@@ -1,0 +1,65 @@
+---
+environments:
+
+  - name: development
+    domains:
+      - target: compose
+        domains:
+          COMPOSE_DEVELOPMENT_ONLY_URL: http://compose_development_only.local
+
+      - target: swarm
+        domains:
+          SWARM_DEVELOPMENT_ONLY_URL: http://swarm_development_only.local
+
+      - target: kubernetes
+        domains:
+          KUBERNETES_DEVELOPMENT_ONLY_URL: http://kubernetes_development_only.local
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        domains:
+          DEVELOPMENT_ONLY_ALL_TARGETS_URL: http://development_only_all_targets.local
+
+  - name: staging
+    domains:
+      - target: compose
+        domains:
+          COMPOSE_STAGING_ONLY_URL: http://compose_staging_only.local
+
+      - target: swarm
+        domains:
+          SWARM_STAGING_ONLY_URL: http://swarm_staging_only.local
+
+      - target: kubernetes
+        domains:
+          KUBERNETES_STAGING_ONLY_URL: http://kubernetes_staging_only.local
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        domains:
+          STAGING_ONLY_ALL_TARGETS_URL: http://staging_only_all_targets.local
+
+  - name: production
+    domains:
+      - target: compose
+        domains:
+          COMPOSE_PRODUCTION_ONLY_URL: http://compose_production_only.local
+
+      - target: swarm
+        domains:
+          SWARM_PRODUCTION_ONLY_URL: http://swarm_production_only.local
+
+      - target: kubernetes
+        domains:
+          KUBERNETES_PRODUCTION_ONLY_URL: http://kubernetes_production_only.local
+
+      - target:
+          - compose
+          - swarm
+          - kubernetes
+        domains:
+          PRODUCTION_ONLY_ALL_TARGETS_URL: http://production_only_all_targets.local
