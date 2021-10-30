@@ -2,7 +2,7 @@ module Squarectl
   # :nodoc:
   class CLI < Admiral::Command
     define_version Squarectl.version
-    define_help description: "Squarectl is Salt PillarStack in Crystal"
+    define_help description: "Squarectl"
 
     register_sub_command compose, Compose, description: "Run Docker Compose commands"
     register_sub_command swarm, Swarm, description: "Run Docker Swarm commands"
