@@ -19,8 +19,8 @@ module Squarectl
 
           args = ["--cert-file", cert_path, "--key-file", key_path, domain_name]
 
-          run_command("mkcert", args: args)
-          run_command("mkcert", args: ["-install"])
+          @executor.run_command("mkcert", args: args)
+          @executor.run_command("mkcert", args: ["-install"])
         else
           puts "SSL certificate already exist for #{domain_name}"
         end

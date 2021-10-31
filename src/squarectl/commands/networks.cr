@@ -9,7 +9,7 @@ module Squarectl
 
       def create_docker_network(net)
         args = ["network", "create", net]
-        run_command("docker", args: args)
+        @executor.run_command("docker", args: args)
       end
 
       def destroy_docker_networks
@@ -20,7 +20,7 @@ module Squarectl
 
       def destroy_docker_network(net)
         args = ["network", "rm", net]
-        run_command("docker", args: args)
+        @executor.run_command("docker", args: args)
       end
     end
   end

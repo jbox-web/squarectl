@@ -38,7 +38,7 @@ module Squarectl
     define_method_array :_build_task_compose_networks, Squarectl::Config::Network, String, networks, networks
     define_method_array :_build_task_ssl_certificates, Squarectl::Config::SSLCertificate, Squarectl::Config::SSLCertificateSpec, ssl_certificates, ssl_certificates
 
-    def self.build(target, environment, all)
+    def self.build(target, environment, all, executor = Executor.new)
       env_vars = build_task_env_vars(target, environment, all)
       domains = build_task_domains(target, environment, all)
       compose_files = build_task_compose_files(target, environment, all)
@@ -50,7 +50,7 @@ module Squarectl
       deploy_configs = build_task_deploy_configs(target, environment, all)
       deploy_secrets = build_task_deploy_secrets(target, environment, all)
 
-      Task.new(target, environment, env_vars, domains, compose_files, compose_networks, ssl_certificates, setup_commands, deploy_server, deploy_configs, deploy_secrets)
+      Task.new(target, environment, env_vars, domains, compose_files, compose_networks, ssl_certificates, setup_commands, deploy_server, deploy_configs, deploy_secrets, executor)
     end
 
     def self.build_task_env_vars(target, environment, all)

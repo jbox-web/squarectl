@@ -3,7 +3,7 @@ module Squarectl
     module Kubectl
       def run_kubectl_apply
         args = ["apply", "-f", environment.kubernetes_dir.to_s]
-        run_command("kubectl", args: args)
+        @executor.run_command("kubectl", args: args)
       end
 
       def run_kubectl_setup_commands
@@ -17,7 +17,7 @@ module Squarectl
             puts "Container not found: #{target}"
           else
             args = ["exec", container_id, "--"] + command
-            run_command("kubectl", args: args)
+            @executor.run_command("kubectl", args: args)
           end
         end
       end

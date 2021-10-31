@@ -3,12 +3,12 @@ module Squarectl
     module Swarm
       def run_docker_stack_deploy
         args = ["stack", "deploy", compose_files_args(prefix: "--compose-file"), "--prune", "--with-registry-auth", "--resolve-image", "always", project_name].flatten
-        run_command("docker", args: args, env: task_env_vars.merge({"DOCKER_HOST" => deploy_server}))
+        @executor.run_command("docker", args: args, env: task_env_vars.merge({"DOCKER_HOST" => deploy_server}))
       end
 
       def run_docker_stack_destroy
         args = ["stack", "rm", project_name]
-        run_command("docker", args: args, env: {"DOCKER_HOST" => deploy_server})
+        @executor.run_command("docker", args: args, env: {"DOCKER_HOST" => deploy_server})
       end
 
       def run_swarm_setup_commands
@@ -22,7 +22,7 @@ module Squarectl
             puts "Container not found: #{target}"
           else
             args = ["exec", container_id] + command
-            run_command("docker", args: args, env: {"DOCKER_HOST" => deploy_server})
+            @executor.run_command("docker", args: args, env: {"DOCKER_HOST" => deploy_server})
           end
         end
       end

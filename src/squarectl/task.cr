@@ -39,7 +39,8 @@ module Squarectl
       @setup_commands : Array(Hash(String, String | Array(String))),
       @deploy_server : String,
       @deploy_configs : Hash(String, String),
-      @deploy_secrets : Hash(String, String)
+      @deploy_secrets : Hash(String, String),
+      @executor : Squarectl::Executor
     )
     end
 
@@ -63,44 +64,6 @@ module Squarectl
 
     def compose_files_args(prefix)
       compose_files.map { |_| prefix }.zip(compose_files).map { |t| [t.first, t.last] }.flatten
-    end
-
-    private def run_command(cmd, args)
-      env = {} of String => String
-      run_command(cmd, args, env)
-    end
-
-    private def exec_command(cmd, args)
-      env = {} of String => String
-      exec_command(cmd, args, env)
-    end
-
-    private def run_command(cmd, args, env)
-      print_debug(cmd, args, env)
-
-      Process.run(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env)
-    end
-
-    private def exec_command(cmd, args, env)
-      print_debug(cmd, args, env)
-
-      Process.exec(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env)
-    end
-
-    private def run_command(cmd, args, env, input)
-      print_debug(cmd, args, env)
-
-      Process.run(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env, input: input)
-    end
-
-    private def print_debug(cmd, args, env)
-      if ENV["SQUARECTL_DEBUG"]? && ENV["SQUARECTL_DEBUG"] == "true"
-        debug = {
-          "CMDLINE" => [cmd, args].flatten,
-          "ENV"     => env,
-        }
-        puts YAML.dump(debug)
-      end
     end
   end
 end
