@@ -84,11 +84,14 @@ environments:
 
     server:
       - type: swarm
-        host: ssh://perso.swarm-dev
+        host: ssh://deploy@swarm-staging
 
     secret_files:
-      MYAPP_SECRETS: deploy/swarm/staging/mydomain.sh
-      POSTGRES_PASSWORD: deploy/swarm/staging/postgres_password.sh
+      MYAPP_SECRETS: spec/fixtures/deploy/swarm/staging/myapp.sh
+      POSTGRES_PASSWORD: spec/fixtures/deploy/swarm/staging/postgres_password.sh
+
+    config_files:
+      MYAPP_CONFIGS: spec/fixtures/deploy/swarm/staging/config.sh
 
     setup_commands:
       - target: all
@@ -119,11 +122,14 @@ environments:
 
     server:
       - type: swarm
-        host: ssh://perso.swarm-dev
+        host: ssh://deploy@swarm-production
 
     secret_files:
-      MYAPP_SECRETS: deploy/swarm/production/mydomain.sh
-      POSTGRES_PASSWORD: deploy/swarm/production/postgres_password.sh
+      MYAPP_SECRETS: spec/fixtures/deploy/swarm/production/myapp.sh
+      POSTGRES_PASSWORD: spec/fixtures/deploy/swarm/production/postgres_password.sh
+
+    config_files:
+      MYAPP_CONFIGS: spec/fixtures/deploy/swarm/production/config.sh
 
     setup_commands:
       - target: all

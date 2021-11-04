@@ -35,7 +35,8 @@ SQUARECTL_SETUP_COMMANDS:
   - -l
   - -c
   - bin/rails myapp:db:setup
-SQUARECTL_CONFIG_FILES: {}
+SQUARECTL_CONFIG_FILES:
+  myapp-stag__MYAPP_CONFIGS: {{ current_dir }}/spec/fixtures/deploy/swarm/staging/config.sh
 SQUARECTL_SECRET_FILES:
-  myapp-stag__MYAPP_SECRETS: {{ current_dir }}/deploy/swarm/staging/mydomain.sh
-  myapp-stag__POSTGRES_PASSWORD: {{ current_dir }}/deploy/swarm/staging/postgres_password.sh
+  myapp-stag__MYAPP_SECRETS: {{ current_dir }}/spec/fixtures/deploy/swarm/staging/myapp.sh
+  myapp-stag__POSTGRES_PASSWORD: {{ current_dir }}/spec/fixtures/deploy/swarm/staging/postgres_password.sh

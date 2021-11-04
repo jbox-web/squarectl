@@ -2,7 +2,7 @@
 SQUARECTL_APP: myapp
 SQUARECTL_ENV: production
 SQUARECTL_TARGET: swarm
-SQUARECTL_TARGET_SERVER: ssh://perso.swarm-dev
+SQUARECTL_TARGET_SERVER: ssh://deploy@swarm-production
 SQUARECTL_CWD: {{ current_dir }}
 SQUARECTL_DATA_DIR: {{ current_dir }}/squarectl
 SQUARECTL_TARGETS_DIR: {{ current_dir }}/squarectl/targets
@@ -36,7 +36,8 @@ SQUARECTL_SETUP_COMMANDS:
   - -l
   - -c
   - bin/rails myapp:db:setup
-SQUARECTL_CONFIG_FILES: {}
+SQUARECTL_CONFIG_FILES:
+  myapp-prod__MYAPP_CONFIGS: {{ current_dir }}/spec/fixtures/deploy/swarm/production/config.sh
 SQUARECTL_SECRET_FILES:
-  myapp-prod__MYAPP_SECRETS: {{ current_dir }}/deploy/swarm/production/mydomain.sh
-  myapp-prod__POSTGRES_PASSWORD: {{ current_dir }}/deploy/swarm/production/postgres_password.sh
+  myapp-prod__MYAPP_SECRETS: {{ current_dir }}/spec/fixtures/deploy/swarm/production/myapp.sh
+  myapp-prod__POSTGRES_PASSWORD: {{ current_dir }}/spec/fixtures/deploy/swarm/production/postgres_password.sh
