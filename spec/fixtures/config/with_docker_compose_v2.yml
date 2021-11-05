@@ -1,0 +1,6 @@
+---
+compose:
+  version: 2
+
+environments:
+  - name: development

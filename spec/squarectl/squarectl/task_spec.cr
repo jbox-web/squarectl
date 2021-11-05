@@ -61,6 +61,84 @@ Spectator.describe Squarectl::Task do
           )
         end
       end
+
+      describe "#build_docker_compose_command" do
+        context "when docker compose version is not specified" do
+          before_each { Squarectl.load_config("spec/fixtures/config/with_docker_compose_v1_default.yml") }
+
+          let(tuple) {
+            {
+              cmd:  "docker-compose",
+              args: [
+                "--project-name",
+                "example_development",
+                "--file",
+                "#{root_dir}/squarectl/base.yml",
+                "--file",
+                "#{root_dir}/squarectl/targets/compose/common.yml",
+                "--file",
+                "#{root_dir}/squarectl/targets/compose/development.yml",
+                "build",
+              ],
+            }
+          }
+
+          it "returns a {cmd, args} tuple for docker compose v1" do
+            expect(task.build_docker_compose_command("build", [] of String)).to eq(tuple)
+          end
+        end
+
+        context "when docker compose version is v1" do
+          before_each { Squarectl.load_config("spec/fixtures/config/with_docker_compose_v1.yml") }
+
+          let(tuple) {
+            {
+              cmd:  "docker-compose",
+              args: [
+                "--project-name",
+                "example_development",
+                "--file",
+                "#{root_dir}/squarectl/base.yml",
+                "--file",
+                "#{root_dir}/squarectl/targets/compose/common.yml",
+                "--file",
+                "#{root_dir}/squarectl/targets/compose/development.yml",
+                "build",
+              ],
+            }
+          }
+
+          it "returns a {cmd, args} tuple for docker compose v1" do
+            expect(task.build_docker_compose_command("build", [] of String)).to eq(tuple)
+          end
+        end
+
+        context "when docker compose version is v2" do
+          before_each { Squarectl.load_config("spec/fixtures/config/with_docker_compose_v2.yml") }
+
+          let(tuple) {
+            {
+              cmd:  "docker",
+              args: [
+                "compose",
+                "--project-name",
+                "example_development",
+                "--file",
+                "#{root_dir}/squarectl/base.yml",
+                "--file",
+                "#{root_dir}/squarectl/targets/compose/common.yml",
+                "--file",
+                "#{root_dir}/squarectl/targets/compose/development.yml",
+                "build",
+              ],
+            }
+          }
+
+          it "returns a {cmd, args} tuple for docker compose v2" do
+            expect(task.build_docker_compose_command("build", [] of String)).to eq(tuple)
+          end
+        end
+      end
     end
 
     context "when environment is staging" do

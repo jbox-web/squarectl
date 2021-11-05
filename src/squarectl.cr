@@ -72,6 +72,10 @@ module Squarectl
     env
   end
 
+  def self.compose_v1?
+    config.compose["version"] == 1
+  end
+
   def self.app_name
     config.app
   end
