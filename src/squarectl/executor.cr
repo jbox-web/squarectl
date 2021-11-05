@@ -21,6 +21,13 @@ module Squarectl
       status.success? ? stdout.to_s.chomp : nil
     end
 
+    def capture_output(cmd : String, args : Array(String), env : Hash(String, String))
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+      status = Process.run(cmd, shell: true, output: stdout, error: stderr, args: args, env: env)
+      status.success? ? stdout.to_s.chomp : nil
+    end
+
     def run_command(cmd : String, args : Array(String), env : Hash(String, String))
       print_debug(cmd, args, env)
 

@@ -28,11 +28,8 @@ module Squarectl
       end
 
       private def get_swarm_container_id(target)
-        stdout = IO::Memory.new
-        stderr = IO::Memory.new
         args = ["ps", "--filter", "name=#{target}", "--format", "{{.ID}}"]
-        status = Process.run("docker", shell: true, output: stdout, error: stderr, args: args, env: {"DOCKER_HOST" => deploy_server})
-        status.success? ? stdout.to_s.chomp : nil
+        @executor.capture_output("docker", args: args, env: {"DOCKER_HOST" => deploy_server})
       end
     end
   end
