@@ -14,6 +14,13 @@ module Squarectl
       exec_command(cmd, args, env)
     end
 
+    def capture_output(cmd : String, args : Array(String))
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+      status = Process.run(cmd, shell: true, output: stdout, error: stderr, args: args)
+      status.success? ? stdout.to_s.chomp : nil
+    end
+
     def run_command(cmd : String, args : Array(String), env : Hash(String, String))
       print_debug(cmd, args, env)
 

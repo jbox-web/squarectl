@@ -23,11 +23,8 @@ module Squarectl
       end
 
       private def get_kube_container_id(target)
-        stdout = IO::Memory.new
-        stderr = IO::Memory.new
         args = ["get", "pods", "--selector=io.kompose.service=#{target}", "--output=custom-columns=NAME:.metadata.name", "--no-headers=true"]
-        status = Process.run("kubectl", shell: true, output: stdout, error: stderr, args: args)
-        status.success? ? stdout.to_s.chomp : nil
+        @executor.capture_output("kubectl", args: args)
       end
     end
   end
