@@ -1,6 +1,9 @@
 module Squarectl
   # :nodoc:
   class Executor
+    def initialize(@output : IO::FileDescriptor | IO::Memory = STDOUT, @error : IO::FileDescriptor | IO::Memory = STDERR)
+    end
+
     def run_command(cmd : String, args : Array(String))
       env = {} of String => String
       run_command(cmd, args, env)
@@ -14,7 +17,7 @@ module Squarectl
     def run_command(cmd : String, args : Array(String), env : Hash(String, String))
       print_debug(cmd, args, env)
 
-      status = Process.run(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env)
+      status = Process.run(cmd, shell: true, output: @output, error: @error, args: args, env: env)
       status.success?
     end
 
@@ -27,7 +30,7 @@ module Squarectl
     def run_command(cmd : String, args : Array(String), env : Hash(String, String), input : File)
       print_debug(cmd, args, env)
 
-      status = Process.run(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env, input: input)
+      status = Process.run(cmd, shell: true, output: @output, error: @error, args: args, env: env, input: input)
       status.success?
     end
 
