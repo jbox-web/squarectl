@@ -100,7 +100,11 @@ Spectator.describe Squarectl::Tasks::Compose do
       stub exec_command(cmd : String, args : Array(String), env : Hash(String, String))
     end
 
-    let(executor) { Squarectl::Executor.new }
+    let(output) { IO::Memory.new }
+    let(error) { IO::Memory.new }
+
+    let(executor) { Squarectl::Executor.new(output: output, error: error) }
+
     let(environment_object) { Squarectl.find_environment(environment: "staging", target: "compose") }
     let(task) { Squarectl::TaskFactory.build("compose", environment_object, Squarectl.environment_all, executor) }
 
@@ -154,6 +158,28 @@ Spectator.describe Squarectl::Tasks::Compose do
       end
     end
 
+    describe ".clean" do
+      it "calls docker-compose command" do
+        args = common_args + ["down", "--rmi", "all", "-v"]
+
+        expect(executor).to receive(:run_command).with("docker-compose", args, task.task_env_vars).and_return(true)
+        expect(executor).to receive(:run_command).with("docker", ["network", "rm", "traefik-public"]).and_return(true)
+
+        described_class.clean(task, task_args)
+      end
+    end
+
+    describe ".up" do
+      it "calls docker-compose command" do
+        args = common_args + ["up", "--remove-orphans"]
+
+        expect(executor).to receive(:run_command).with("docker", ["network", "create", "traefik-public"]).and_return(true)
+        expect(executor).to receive(:exec_command).with("docker-compose", args, task.task_env_vars).and_raise(Spectator::SystemExit)
+
+        expect { described_class.up(task, task_args) }.to raise_error(Spectator::SystemExit)
+      end
+    end
+
     describe ".down" do
       it "calls docker-compose command" do
         args = common_args + ["down"]
@@ -181,25 +207,21 @@ Spectator.describe Squarectl::Tasks::Compose do
       end
     end
 
-    describe ".clean" do
+    describe ".setup" do
       it "calls docker-compose command" do
-        args = common_args + ["down", "--rmi", "all", "-v"]
+        # set expectation on the cmd line
+        args = common_args + ["exec", "-T", "crono", "bash", "-l", "-c", "bin/rails myapp:db:setup"]
 
         expect(executor).to receive(:run_command).with("docker-compose", args, task.task_env_vars).and_return(true)
-        expect(executor).to receive(:run_command).with("docker", ["network", "rm", "traefik-public"]).and_return(true)
 
-        described_class.clean(task, task_args)
-      end
-    end
+        # call the method
+        described_class.setup(task, task_args)
 
-    describe ".up" do
-      it "calls docker-compose command" do
-        args = common_args + ["up", "--remove-orphans"]
-
-        expect(executor).to receive(:run_command).with("docker", ["network", "create", "traefik-public"]).and_return(true)
-        expect(executor).to receive(:exec_command).with("docker-compose", args, task.task_env_vars).and_raise(Spectator::SystemExit)
-
-        expect { described_class.up(task, task_args) }.to raise_error(Spectator::SystemExit)
+        # be sure that stdout or stderr are empty
+        # if not, it means that the mock has failed and the cmd
+        # has been really executed and thus that something has changed.
+        expect(output.to_s).to eq("")
+        expect(error.to_s).to eq("")
       end
     end
   end
