@@ -93,11 +93,11 @@ Spectator.describe Squarectl::Tasks::Compose do
     before_each { Squarectl.load_config("spec/fixtures/config/complex.yml") }
 
     mock Squarectl::Executor do
-      stub run_command(cmd, args)
-      stub exec_command(cmd, args)
+      stub run_command(cmd : String, args : Array(String)) { true }
+      stub exec_command(cmd : String, args : Array(String))
 
-      stub run_command(cmd, args, env)
-      stub exec_command(cmd, args, env)
+      stub run_command(cmd : String, args : Array(String), env : Hash(String, String)) { true }
+      stub exec_command(cmd : String, args : Array(String), env : Hash(String, String))
     end
 
     let(executor) { Squarectl::Executor.new }

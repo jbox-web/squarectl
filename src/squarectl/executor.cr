@@ -1,30 +1,30 @@
 module Squarectl
   # :nodoc:
   class Executor
-    def run_command(cmd, args)
+    def run_command(cmd : String, args : Array(String))
       env = {} of String => String
       run_command(cmd, args, env)
     end
 
-    def exec_command(cmd, args)
+    def exec_command(cmd : String, args : Array(String))
       env = {} of String => String
       exec_command(cmd, args, env)
     end
 
-    def run_command(cmd, args, env)
+    def run_command(cmd : String, args : Array(String), env : Hash(String, String))
       print_debug(cmd, args, env)
 
       status = Process.run(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env)
       status.success?
     end
 
-    def exec_command(cmd, args, env)
+    def exec_command(cmd : String, args : Array(String), env : Hash(String, String))
       print_debug(cmd, args, env)
 
       Process.exec(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env)
     end
 
-    def run_command(cmd, args, env, input)
+    def run_command(cmd : String, args : Array(String), env : Hash(String, String), input : File)
       print_debug(cmd, args, env)
 
       status = Process.run(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env, input: input)
