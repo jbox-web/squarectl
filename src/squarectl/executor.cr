@@ -51,8 +51,9 @@ module Squarectl
     private def print_debug(cmd, args, env)
       if ENV["SQUARECTL_DEBUG"]? && ENV["SQUARECTL_DEBUG"] == "true"
         debug = {
-          "CMDLINE" => [cmd, args].flatten,
-          "ENV"     => env,
+          "CMDLINE"     => [cmd, args].flatten,
+          "CMDLINE_STR" => [cmd, args].flatten.join(" "),
+          "ENV"         => env,
         }
         puts YAML.dump(debug)
       end
