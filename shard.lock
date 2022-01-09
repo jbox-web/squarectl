@@ -14,9 +14,9 @@ shards:
 
   crystal-env:
     git: https://github.com/crystal-lang/crystal-env.git
-    version: 0.1.0+git.commit.172cf5709b56831b8a2581d826f0262ac4f7cffd
+    version: 0.1.0+git.commit.05a1d92cfbb11a75a0077323b9631a467b7a6b91
 
   spectator:
     git: https://gitlab.com/arctic-fox/spectator.git
-    version: 0.10.2
+    version: 0.10.3
 
