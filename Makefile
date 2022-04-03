@@ -25,9 +25,9 @@ else
 endif
 
 ifeq ($(shell tty -s && echo true),true)
-  SPEC_OPTS += --verbose
-  COMPILE_OPTS_DEV += --progress
-  COMPILE_OPTS_RELEASE += --progress
+	SPEC_OPTS += --verbose
+	COMPILE_OPTS_DEV += --progress
+	COMPILE_OPTS_RELEASE += --progress
 endif
 
 # This is the default task
