@@ -24,6 +24,9 @@ jobs:
       - name: Run tests
         run: make spec
 
+      - name: Run static code analysis
+        run: make ameba
+
   test_macos:
     runs-on: macos-11
     steps:
@@ -40,3 +43,6 @@ jobs:
 
       - name: Run tests
         run: make spec
+
+      - name: Run static code analysis
+        run: make ameba
