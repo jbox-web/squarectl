@@ -87,6 +87,14 @@ Spectator.describe Squarectl::Tasks::Compose do
         described_class.setup(task, args)
       end
     end
+
+    describe ".exec" do
+      it "calls docker-compose exec" do
+        task = double(:task)
+        expect(task).to receive(:exec_docker_compose).with("exec", args)
+        described_class.exec(task, args)
+      end
+    end
   end
 
   context "with real task object" do
@@ -222,6 +230,15 @@ Spectator.describe Squarectl::Tasks::Compose do
         # has been really executed and thus that something has changed.
         expect(output.to_s).to eq("")
         expect(error.to_s).to eq("")
+      end
+    end
+
+    describe ".exec" do
+      it "calls docker-compose command" do
+        args = common_args + ["exec"]
+
+        expect(executor).to receive(:exec_command).with("docker-compose", args, task.task_env_vars).and_raise(Spectator::SystemExit)
+        expect { described_class.exec(task, task_args) }.to raise_error(Spectator::SystemExit)
       end
     end
   end

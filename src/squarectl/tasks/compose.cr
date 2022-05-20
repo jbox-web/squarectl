@@ -53,6 +53,10 @@ module Squarectl
       def self.setup(task, args)
         task.run_docker_compose_setup_commands
       end
+
+      def self.exec(task, args)
+        task.exec_docker_compose("exec", args)
+      end
     end
   end
 end

@@ -171,6 +171,27 @@ module Squarectl
         end
       end
 
+      class Exec < Admiral::Command
+        define_help description: "Run docker-compose exec"
+
+        define_flag config : String,
+          description: "Path to config file",
+          long: "config",
+          short: "c",
+          default: "squarectl.yml"
+
+        define_argument environment : String,
+          description: "Squarectl ENVIRONMENT",
+          required: true
+
+        def run
+          Squarectl.load_config(flags.config)
+          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
+          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
+          Squarectl::Tasks::Compose.exec(task, arguments.rest)
+        end
+      end
+
       define_help description: "Run Docker Compose commands"
 
       define_flag config : String,
@@ -187,6 +208,7 @@ module Squarectl
       register_sub_command ps, Ps, description: "Run docker-compose ps"
       register_sub_command setup, Setup, description: "Run docker-compose setup"
       register_sub_command clean, Clean, description: "Run docker-compose clean"
+      register_sub_command exec, Exec, description: "Run docker-compose exec"
 
       def run
         puts help
