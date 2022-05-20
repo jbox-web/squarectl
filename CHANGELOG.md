@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.0 (2022/05/20)
+
+* build: bump to Crystal 1.4.1
+* build: only publish a static binary on releases
+* feat: add docker-compose exec command
+
 ## 1.1.0 (2021/11/06)
 
 * add tests (a lot of tests)
