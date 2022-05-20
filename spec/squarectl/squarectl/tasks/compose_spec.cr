@@ -95,6 +95,14 @@ Spectator.describe Squarectl::Tasks::Compose do
         described_class.exec(task, args)
       end
     end
+
+    describe ".start" do
+      it "calls docker-compose start" do
+        task = double(:task)
+        expect(task).to receive(:exec_docker_compose).with("start", args)
+        described_class.start(task, args)
+      end
+    end
   end
 
   context "with real task object" do
@@ -239,6 +247,15 @@ Spectator.describe Squarectl::Tasks::Compose do
 
         expect(executor).to receive(:exec_command).with("docker-compose", args, task.task_env_vars).and_raise(Spectator::SystemExit)
         expect { described_class.exec(task, task_args) }.to raise_error(Spectator::SystemExit)
+      end
+    end
+
+    describe ".start" do
+      it "calls docker-compose command" do
+        args = common_args + ["start"]
+
+        expect(executor).to receive(:exec_command).with("docker-compose", args, task.task_env_vars).and_raise(Spectator::SystemExit)
+        expect { described_class.start(task, task_args) }.to raise_error(Spectator::SystemExit)
       end
     end
   end
