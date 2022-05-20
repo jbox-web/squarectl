@@ -46,7 +46,7 @@ ARG TARGETOS
 ARG TARGETARCH
 
 # Grab squarectl binary from **binary-file** step and inject it in the final image
-COPY --from=binary-file /build/bin/squarectl-${TARGETOS}-${TARGETARCH}-static /usr/bin/squarectl
+COPY --from=binary-file /build/bin/squarectl-${TARGETOS}-${TARGETARCH} /usr/bin/squarectl
 
 # Set runtime environment
 USER nonroot
