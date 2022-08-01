@@ -66,7 +66,7 @@ module Squarectl
 
   def self.find_environment(environment, target)
     raise "Target not found: #{target}" if !%w[compose swarm kubernetes].includes?(target)
-    env = environments.not_nil!.find { |e| e.name.includes?(environment) }
+    env = environments.not_nil!.find(&.name.includes?(environment))
     raise "Environment not found: #{environment}" if env.nil?
     raise "You can't use this command in development environment" if env.development? && target != "compose"
     env
