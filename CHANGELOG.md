@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.0 (2022/08/02)
+
+* build: bump to Crystal 1.5.0
+
 ## 1.2.1 (2022/05/20)
 
 * feat: add docker-compose start command
