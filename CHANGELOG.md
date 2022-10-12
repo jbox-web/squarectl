@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 1.3.0 (2022/08/02)
+## 1.3.0 (2022/10/13)
 
-* build: bump to Crystal 1.5.0
+* build: bump to Crystal 1.6.0
 
 ## 1.2.1 (2022/05/20)
 
