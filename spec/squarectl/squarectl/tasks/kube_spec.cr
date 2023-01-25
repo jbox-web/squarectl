@@ -3,6 +3,10 @@ require "../../../spec_helper.cr"
 Spectator.describe Squarectl::Tasks::Kube do
   context "with fake task object" do
     double :task do
+      stub def capture_docker_compose(action, args)
+      end
+      stub def run_kompose_convert(config, args)
+      end
       stub def run_kubectl_apply
       end
       stub def run_kubectl_setup_commands
@@ -16,7 +20,8 @@ Spectator.describe Squarectl::Tasks::Kube do
     describe ".convert" do
       it "calls kompose convert command" do
         task = double(:task)
-        expect(task).to receive(:run_kompose).with("convert", ["--out", "foo", "--with-kompose-annotation=false"])
+        expect(task).to receive(:capture_docker_compose).with("config", [] of String)
+        expect(task).to receive(:run_kompose_convert).with(nil, ["--out", "foo", "--with-kompose-annotation=false"])
         described_class.convert(task, args, "foo")
       end
     end
@@ -55,22 +60,33 @@ Spectator.describe Squarectl::Tasks::Kube do
 
     let(task_args) { [] of String }
 
+    let(docker_args) {
+      [
+        "--project-name",
+        "myapp_staging",
+        "--file",
+        "#{root_dir}/squarectl/base.yml",
+        "--file",
+        "#{root_dir}/squarectl/targets/compose/common.yml",
+        "--file",
+        "#{root_dir}/squarectl/targets/compose/staging.yml",
+        "--file",
+        "#{root_dir}/squarectl/targets/common/monitoring.yml",
+        "--file",
+        "#{root_dir}/squarectl/targets/common/debug.yml",
+        "--file",
+        "#{root_dir}/squarectl/targets/common/networks.yml",
+      ]
+    }
+
     describe ".convert" do
       it "calls kompose command" do
-        args = [
-          "--file",
-          "#{root_dir}/squarectl/base.yml",
-          "--file",
-          "#{root_dir}/squarectl/targets/kubernetes/common.yml",
-          "--file",
-          "#{root_dir}/squarectl/targets/kubernetes/staging.yml",
-          "convert",
-          "--out",
-          "#{root_dir}/kubernetes/staging/",
-          "--with-kompose-annotation=false",
-        ]
+        # FIXME
+        # final_docker_args = docker_args + ["config"]
+        # expect(executor).to receive(:capture_output).with("docker-compose", final_docker_args, task.task_env_vars).and_return("")
 
-        expect(executor).to receive(:run_command).with("kompose", args, task.task_env_vars).and_return(true)
+        expect(executor).to receive(:capture_output).with("docker-compose").and_return("")
+        expect(executor).to receive(:run_command).with("kompose").and_return(true)
 
         # call the method
         described_class.convert(task, task_args, "")

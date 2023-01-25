@@ -5,13 +5,15 @@ module Squarectl
         if output.empty?
           output = task.environment.not_nil!.kubernetes_dir.to_s
           output = "#{output}/" unless output.ends_with?("/")
-
-          puts "Removing previous Kubernetes configuration: #{output}"
-          FileUtils.rm_rf(output)
         end
 
+        puts "Removing previous Kubernetes configuration: #{output}"
+        FileUtils.rm_rf(output)
+
+        config = task.capture_docker_compose("config", args)
+
         args = ["--out", output, "--with-kompose-annotation=false"] + args
-        task.run_kompose("convert", args)
+        task.run_kompose_convert(config, args)
       end
 
       def self.apply(task, args)

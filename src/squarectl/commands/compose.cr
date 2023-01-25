@@ -1,6 +1,11 @@
 module Squarectl
   module Commands
     module Compose
+      def capture_docker_compose(action, args)
+        tuple = build_docker_compose_command(action, args)
+        @executor.capture_output(tuple[:cmd], args: tuple[:args], env: task_env_vars)
+      end
+
       def run_docker_compose(action, args)
         tuple = build_docker_compose_command(action, args)
         @executor.run_command(tuple[:cmd], args: tuple[:args], env: task_env_vars)
