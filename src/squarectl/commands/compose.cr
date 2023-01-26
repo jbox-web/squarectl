@@ -6,7 +6,7 @@ module Squarectl
         @executor.run_command(tuple[:cmd], args: tuple[:args], env: task_env_vars)
       end
 
-      def exec_docker_compose(action, args)
+      def exec_docker_compose(action, args) : NoReturn
         tuple = build_docker_compose_command(action, args)
         @executor.exec_command(tuple[:cmd], args: tuple[:args], env: task_env_vars)
       end

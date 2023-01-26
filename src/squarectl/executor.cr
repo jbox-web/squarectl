@@ -35,7 +35,7 @@ module Squarectl
       status.success?
     end
 
-    def exec_command(cmd : String, args : Array(String), env : Hash(String, String))
+    def exec_command(cmd : String, args : Array(String), env : Hash(String, String)) : NoReturn
       print_debug(cmd, args, env)
 
       Process.exec(cmd, shell: true, output: STDOUT, error: STDERR, args: args, env: env)

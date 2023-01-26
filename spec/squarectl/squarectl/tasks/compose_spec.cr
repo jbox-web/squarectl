@@ -3,11 +3,20 @@ require "../../../spec_helper.cr"
 Spectator.describe Squarectl::Tasks::Compose do
   context "with fake task object" do
     double :task do
-      stub run_docker_compose(cmd, args)
-      stub exec_docker_compose(cmd, args)
-      stub create_ssl_certificates
-      stub create_docker_networks
-      stub run_docker_compose_setup_commands
+      stub def run_docker_compose(cmd, args)
+      end
+      stub def exec_docker_compose(cmd, args)
+      end
+      stub def create_ssl_certificates
+      end
+      stub def create_docker_networks
+      end
+      stub def run_docker_compose_setup_commands
+      end
+      stub def destroy_docker_networks
+      end
+      stub def destroy_ssl_certificates
+      end
     end
 
     let(args) { [] of String }
@@ -116,18 +125,12 @@ Spectator.describe Squarectl::Tasks::Compose do
   context "with real task object" do
     before_each { Squarectl.load_config("spec/fixtures/config/complex.yml") }
 
-    mock Squarectl::Executor do
-      stub run_command(cmd : String, args : Array(String)) { true }
-      stub exec_command(cmd : String, args : Array(String))
-
-      stub run_command(cmd : String, args : Array(String), env : Hash(String, String)) { true }
-      stub exec_command(cmd : String, args : Array(String), env : Hash(String, String))
-    end
+    mock Squarectl::Executor
 
     let(output) { IO::Memory.new }
     let(error) { IO::Memory.new }
 
-    let(executor) { Squarectl::Executor.new(output: output, error: error) }
+    let(executor) { mock(Squarectl::Executor) }
 
     let(environment_object) { Squarectl.find_environment(environment: "staging", target: "compose") }
     let(task) { Squarectl::TaskFactory.build("compose", environment_object, Squarectl.environment_all, executor) }

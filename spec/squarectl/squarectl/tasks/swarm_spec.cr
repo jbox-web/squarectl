@@ -3,9 +3,12 @@ require "../../../spec_helper.cr"
 Spectator.describe Squarectl::Tasks::Swarm do
   context "with fake task object" do
     double :task do
-      stub run_docker_stack_deploy
-      stub run_docker_stack_destroy
-      stub run_swarm_setup_commands
+      stub def run_docker_stack_deploy
+      end
+      stub def run_docker_stack_destroy
+      end
+      stub def run_swarm_setup_commands
+      end
     end
 
     let(args) { [] of String }
@@ -38,15 +41,12 @@ Spectator.describe Squarectl::Tasks::Swarm do
   context "with real task object" do
     before_each { Squarectl.load_config("spec/fixtures/config/complex.yml") }
 
-    mock Squarectl::Executor do
-      stub run_command(cmd : String, args : Array(String), env : Hash(String, String)) { true }
-      stub capture_output(cmd : String, args : Array(String), env : Hash(String, String)) { "12345" }
-    end
+    mock Squarectl::Executor
 
     let(output) { IO::Memory.new }
     let(error) { IO::Memory.new }
 
-    let(executor) { Squarectl::Executor.new(output: output, error: error) }
+    let(executor) { mock(Squarectl::Executor) }
 
     let(environment_object) { Squarectl.find_environment(environment: "staging", target: "swarm") }
     let(task) { Squarectl::TaskFactory.build("swarm", environment_object, Squarectl.environment_all, executor) }

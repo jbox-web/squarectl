@@ -3,7 +3,7 @@ module Squarectl
     class Kube
       def self.convert(task, args, output)
         if output.empty?
-          output = task.environment.kubernetes_dir.to_s
+          output = task.environment.not_nil!.kubernetes_dir.to_s
           output = "#{output}/" unless output.ends_with?("/")
 
           puts "Removing previous Kubernetes configuration: #{output}"

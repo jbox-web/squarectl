@@ -3,8 +3,12 @@ require "../../../spec_helper.cr"
 Spectator.describe Squarectl::Tasks::Kube do
   context "with fake task object" do
     double :task do
-      stub run_kubectl_apply
-      stub run_kubectl_setup_commands
+      stub def run_kubectl_apply
+      end
+      stub def run_kubectl_setup_commands
+      end
+      stub def run_kompose(action, args)
+      end
     end
 
     let(args) { [] of String }
@@ -37,19 +41,12 @@ Spectator.describe Squarectl::Tasks::Kube do
   context "with real task object" do
     before_each { Squarectl.load_config("spec/fixtures/config/complex.yml") }
 
-    mock Squarectl::Executor do
-      stub run_command(cmd : String, args : Array(String)) { true }
-      stub capture_output(cmd : String, args : Array(String)) { "12345" }
-      stub exec_command(cmd : String, args : Array(String))
-
-      stub run_command(cmd : String, args : Array(String), env : Hash(String, String)) { true }
-      stub exec_command(cmd : String, args : Array(String), env : Hash(String, String))
-    end
+    mock Squarectl::Executor
 
     let(output) { IO::Memory.new }
     let(error) { IO::Memory.new }
 
-    let(executor) { Squarectl::Executor.new(output: output, error: error) }
+    let(executor) { mock(Squarectl::Executor) }
 
     let(environment_object) { Squarectl.find_environment(environment: "staging", target: "kubernetes") }
     let(task) { Squarectl::TaskFactory.build("kubernetes", environment_object, Squarectl.environment_all, executor) }

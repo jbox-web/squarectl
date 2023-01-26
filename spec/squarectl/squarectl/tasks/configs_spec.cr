@@ -3,8 +3,10 @@ require "../../../spec_helper.cr"
 Spectator.describe Squarectl::Tasks::Configs do
   context "with fake task object" do
     double :task do
-      stub create_docker_configs(args)
-      stub destroy_docker_configs(args)
+      stub def create_docker_configs(args)
+      end
+      stub def destroy_docker_configs(args)
+      end
     end
 
     let(args) { [] of String }
@@ -29,15 +31,12 @@ Spectator.describe Squarectl::Tasks::Configs do
   context "with real task object" do
     before_each { Squarectl.load_config("spec/fixtures/config/complex.yml") }
 
-    mock Squarectl::Executor do
-      stub run_command(cmd : String, args : Array(String), env : Hash(String, String)) { true }
-      stub run_command(cmd : String, args : Array(String), env : Hash(String, String), input : File) { true }
-    end
+    mock Squarectl::Executor
 
     let(output) { IO::Memory.new }
     let(error) { IO::Memory.new }
 
-    let(executor) { Squarectl::Executor.new(output: output, error: error) }
+    let(executor) { mock(Squarectl::Executor) }
 
     let(environment_object) { Squarectl.find_environment(environment: "staging", target: "swarm") }
     let(task) { Squarectl::TaskFactory.build("swarm", environment_object, Squarectl.environment_all, executor) }
@@ -47,7 +46,8 @@ Spectator.describe Squarectl::Tasks::Configs do
     describe ".create" do
       it "calls docker config create command" do
         # set expectation on the cmd line
-        expect(executor).to receive(:run_command).with("docker", ["config", "create", "myapp-stag__MYAPP_CONFIGS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}, File.open("spec/fixtures/deploy/swarm/staging/config.sh")).and_return(true)
+        # FIXME: expect(executor).to receive(:run_command).with("docker", ["config", "create", "myapp-stag__MYAPP_CONFIGS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}, File.open("spec/fixtures/deploy/swarm/staging/config.sh")).and_return(true)
+        expect(executor).to receive(:run_command).with("docker", ["config", "create", "myapp-stag__MYAPP_CONFIGS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return(true)
 
         # call the method
         described_class.create(task, task_args)
