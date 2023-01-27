@@ -3,6 +3,7 @@
 ## 1.4.0 (2022/10/13)
 
 * build: bump to Crystal 1.7.2
+* fix: kompose no longer interpolate env vars
 
 ## 1.3.0 (2022/10/13)
 
