@@ -3,6 +3,7 @@
 ## 1.4.1 (2023/04/09)
 
 * build: bump to Crystal 1.7.3
+* feat: add `squarectl compose push` subcommand
 
 ## 1.4.0 (2022/10/13)
 
