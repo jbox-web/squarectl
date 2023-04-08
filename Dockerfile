@@ -4,7 +4,7 @@
 
 # Build squarectl with Crystal upstream image
 # Use alpine variant to build static binary
-FROM crystallang/crystal:1.7.2-alpine AS binary-file
+FROM crystallang/crystal:1.7.3-alpine AS binary-file
 
 # Fetch platforms variables from ARGS
 ARG TARGETPLATFORM
