@@ -24,7 +24,7 @@ _squarectl_completion() {
 
   # Case 1: compose command
   local compose_commands_list
-  compose_commands_list=(build clean config down ps setup top up exec start stop)
+  compose_commands_list=(build clean config push down ps setup top up exec start stop)
 
   # Case 2: configs command
   local configs_commands_list
