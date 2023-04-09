@@ -17,7 +17,7 @@ Crystal::Env.default("development")
 require "./squarectl/**"
 
 module Squarectl
-  VERSION = "1.4.1"
+  VERSION = "1.4.2"
 
   @@environment_all : Squarectl::Config::SquarectlEnvironment?
 
