@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.4.2 (2023/04/09)
+
+* fix: add missing subcommand binding
+* fix: add missing subcommand completion
+
 ## 1.4.1 (2023/04/09)
 
 * build: bump to Crystal 1.7.3
