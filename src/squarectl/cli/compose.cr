@@ -265,6 +265,7 @@ module Squarectl
 
       register_sub_command config, Config, description: "Run docker-compose config"
       register_sub_command build, Build, description: "Run docker-compose build"
+      register_sub_command push, Push, description: "Run docker-compose push"
       register_sub_command up, Up, description: "Run docker-compose up"
       register_sub_command down, Down, description: "Run docker-compose down"
       register_sub_command top, Top, description: "Run docker-compose top"
