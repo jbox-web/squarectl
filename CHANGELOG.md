@@ -4,6 +4,8 @@
 
 * build: bump to Crystal 1.7.3
 * feat: add `squarectl compose push` subcommand
+* build: bump to earthly 0.7.2
+* ci: fix Github Actions warnings
 
 ## 1.4.0 (2022/10/13)
 
