@@ -173,7 +173,9 @@ module Squarectl
       register_sub_command convert, Convert, description: "Convert Docker Swarm Secrets"
 
       def run
-        puts help
+        rescue_unknown_cmd do
+          super
+        end
       end
     end
   end

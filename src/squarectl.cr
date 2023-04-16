@@ -13,6 +13,9 @@ require "crinja"
 # Set environment
 Crystal::Env.default("development")
 
+# Load patches
+require "./admiral_patch"
+
 # Load squarectl
 require "./squarectl/**"
 

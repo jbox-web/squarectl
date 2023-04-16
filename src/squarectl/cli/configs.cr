@@ -57,7 +57,9 @@ module Squarectl
       register_sub_command destroy, Destroy, description: "Destroy Docker Swarm Configs"
 
       def run
-        puts help
+        rescue_unknown_cmd do
+          super
+        end
       end
     end
   end

@@ -277,7 +277,9 @@ module Squarectl
       register_sub_command stop, Stop, description: "Run docker-compose stop"
 
       def run
-        puts help
+        rescue_unknown_cmd do
+          super
+        end
       end
     end
   end

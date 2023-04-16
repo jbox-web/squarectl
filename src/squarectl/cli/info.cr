@@ -77,7 +77,9 @@ module Squarectl
       register_sub_command kube, Kubernetes, description: "Get Squarectl configuration info about Kubernetes target"
 
       def run
-        puts help
+        rescue_unknown_cmd do
+          super
+        end
       end
     end
   end

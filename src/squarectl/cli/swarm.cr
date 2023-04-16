@@ -167,7 +167,9 @@ module Squarectl
       register_sub_command destroy, Destroy, description: "Run docker stack rm"
 
       def run
-        puts help
+        rescue_unknown_cmd do
+          super
+        end
       end
     end
   end

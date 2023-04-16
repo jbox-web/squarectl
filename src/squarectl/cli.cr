@@ -13,7 +13,9 @@ module Squarectl
     register_sub_command completion, Completion, description: "Install shell completion"
 
     def run
-      puts help
+      rescue_unknown_cmd do
+        super
+      end
     end
   end
 end
