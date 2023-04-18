@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.5.0 (2023/04/19)
+
+* build: bump to Crystal 1.8.0
+* ci: fix github warning
+* fix: rescue on unknown command/subcommand and display help
+
 ## 1.4.2 (2023/04/09)
 
 * fix: add missing subcommand binding
