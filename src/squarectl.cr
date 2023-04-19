@@ -20,7 +20,7 @@ require "./admiral_patch"
 require "./squarectl/**"
 
 module Squarectl
-  VERSION = "1.4.2"
+  VERSION = "1.5.0"
 
   @@environment_all : Squarectl::Config::SquarectlEnvironment?
 
