@@ -135,11 +135,11 @@ module Squarectl
 
         # generate domain key
         domain_key = key.gsub("_URL", "_DOMAIN")
-        new_hash[domain_key] = uri.host.not_nil!
+        new_hash[domain_key] = uri.host.not_nil! # ameba:disable Lint/NotNil
 
         # generate scheme key
         scheme_key = key.gsub("_URL", "_SCHEME")
-        new_hash[scheme_key] = uri.scheme.not_nil!
+        new_hash[scheme_key] = uri.scheme.not_nil! # ameba:disable Lint/NotNil
       end
       hash.merge(new_hash)
     end

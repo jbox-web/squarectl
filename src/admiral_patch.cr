@@ -1,5 +1,5 @@
 class Admiral::Command
-  def rescue_unknown_cmd
+  def rescue_unknown_cmd(&)
     begin
       yield
     rescue e : Admiral::Error

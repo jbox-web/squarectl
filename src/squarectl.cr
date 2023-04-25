@@ -64,12 +64,12 @@ module Squarectl
   end
 
   def self.environment_all
-    @@environment_all ||= environments.not_nil!.find { |e| e.name == "all" }
+    @@environment_all ||= environments.not_nil!.find { |e| e.name == "all" } # ameba:disable Lint/NotNil
   end
 
   def self.find_environment(environment, target)
     raise "Target not found: #{target}" if !%w[compose swarm kubernetes].includes?(target)
-    env = environments.not_nil!.find(&.name.includes?(environment))
+    env = environments.not_nil!.find(&.name.includes?(environment)) # ameba:disable Lint/NotNil
     raise "Environment not found: #{environment}" if env.nil?
     raise "You can't use this command in development environment" if env.development? && target != "compose"
     env
