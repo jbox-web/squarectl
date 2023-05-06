@@ -198,7 +198,6 @@ module Squarectl
         define_flag config : String,
           description: "Path to config file",
           long: "config",
-          short: "c",
           default: "squarectl.yml"
 
         define_argument environment : String,
