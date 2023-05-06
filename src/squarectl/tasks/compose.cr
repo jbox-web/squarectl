@@ -58,6 +58,10 @@ module Squarectl
         task.exec_docker_compose("exec", args)
       end
 
+      def self.cp(task, args)
+        task.exec_docker_compose("cp", args)
+      end
+
       def self.start(task, args)
         task.exec_docker_compose("start", args)
       end
