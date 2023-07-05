@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.5.1 (2023/07/05)
+
+* build: bump to Crystal 1.8.2
+* feat: add compose cp subcommand
+* fix: remove short version of config flag because if conflicts with bash -l -c
+
 ## 1.5.0 (2023/04/19)
 
 * build: bump to Crystal 1.8.0
