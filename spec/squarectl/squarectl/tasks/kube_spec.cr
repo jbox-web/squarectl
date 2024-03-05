@@ -21,7 +21,7 @@ Spectator.describe Squarectl::Tasks::Kube do
       it "calls kompose convert command" do
         task = double(:task)
         expect(task).to receive(:capture_docker_compose).with("config", [] of String)
-        expect(task).to receive(:run_kompose_convert).with(nil, ["--out", "foo", "--with-kompose-annotation=false"])
+        expect(task).to receive(:run_kompose_convert).with(nil, ["--out", "foo"])
         described_class.convert(task, args, "foo")
       end
     end

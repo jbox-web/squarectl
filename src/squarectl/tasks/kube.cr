@@ -10,9 +10,9 @@ module Squarectl
         puts "Removing previous Kubernetes configuration: #{output}"
         FileUtils.rm_rf(output)
 
-        config = task.capture_docker_compose("config", args)
+        config = task.capture_docker_compose("config", [] of String)
 
-        args = ["--out", output, "--with-kompose-annotation=false"] + args
+        args = ["--out", output] + args
         task.run_kompose_convert(config, args)
       end
 
