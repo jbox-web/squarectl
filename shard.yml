@@ -2,7 +2,7 @@ name: squarectl
 
 version: 1.5.1
 
-crystal: 1.10.0
+crystal: 1.11.2
 
 license: MIT
 
