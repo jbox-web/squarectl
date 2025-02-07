@@ -40,7 +40,7 @@ module Squarectl
       @deploy_server : String,
       @deploy_configs : Hash(String, String),
       @deploy_secrets : Hash(String, String),
-      @executor : Squarectl::Executor
+      @executor : Squarectl::Executor,
     )
     end
 
