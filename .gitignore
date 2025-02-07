@@ -6,3 +6,6 @@
 # Ignore all bin files
 /bin/*
 !/bin/.keep
+
+# Ignore MacOS files
+.DS_Store
