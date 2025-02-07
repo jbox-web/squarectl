@@ -64,7 +64,7 @@ module Squarectl
 
     def self.build_task_compose_files(target, environment, all)
       result = _build_task_compose_files(target, environment, all)
-      result = result.map { |f| Squarectl.targets_common_dir.join(f) }
+      result = result.map { |file| Squarectl.targets_common_dir.join(file) }
       base_compose_files = [environment.compose_file_base_for(target), environment.compose_file_common_for(target), environment.compose_file_env_for(target)]
       (base_compose_files + result).map(&.to_s)
     end

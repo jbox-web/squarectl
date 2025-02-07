@@ -63,7 +63,7 @@ module Squarectl
     end
 
     def compose_files_args(prefix)
-      compose_files.map { |_| prefix }.zip(compose_files).flat_map { |t| [t.first, t.last] }
+      compose_files.map { |_| prefix }.zip(compose_files).flat_map { |args| [args.first, args.last] }
     end
   end
 end
