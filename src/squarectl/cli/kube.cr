@@ -6,12 +6,14 @@ module Squarectl
       class Config < Admiral::Command
         define_help description: "Run docker-compose config"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -27,12 +29,14 @@ module Squarectl
       class Build < Admiral::Command
         define_help description: "Run docker-compose build"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -48,12 +52,14 @@ module Squarectl
       class Push < Admiral::Command
         define_help description: "Run docker-compose push"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -69,12 +75,14 @@ module Squarectl
       class Clean < Admiral::Command
         define_help description: "Run docker-compose clean"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -90,12 +98,14 @@ module Squarectl
       class Deploy < Admiral::Command
         define_help description: "Deploy Kubernetes configuration"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -111,12 +121,14 @@ module Squarectl
       class Setup < Admiral::Command
         define_help description: "Run kubectl exec"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -132,18 +144,21 @@ module Squarectl
       class Convert < Admiral::Command
         define_help description: "Convert Docker Compose configuration to Kubernetes"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_flag output : String,
           description: "Specify a file name or directory to save objects to (if path does not exist, a file will be created)",
           long: "output",
           short: "o",
           default: ""
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -158,6 +173,7 @@ module Squarectl
 
       define_help description: "Manage Kubernetes configuration"
 
+      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

@@ -4,12 +4,14 @@ module Squarectl
       class Compose < Admiral::Command
         define_help description: "Get Squarectl configuration info about Compose target"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -25,12 +27,14 @@ module Squarectl
       class Swarm < Admiral::Command
         define_help description: "Get Squarectl configuration info about Swarm target"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -46,12 +50,14 @@ module Squarectl
       class Kubernetes < Admiral::Command
         define_help description: "Get Squarectl configuration info about Kubernetes target"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -66,6 +72,7 @@ module Squarectl
 
       define_help description: "Get Squarectl info"
 
+      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

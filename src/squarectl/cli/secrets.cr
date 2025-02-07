@@ -6,12 +6,14 @@ module Squarectl
       class Create < Admiral::Command
         define_help description: "Create Docker Swarm Secrets"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -27,12 +29,14 @@ module Squarectl
       class Destroy < Admiral::Command
         define_help description: "Destroy Docker Swarm Secrets"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -47,6 +51,7 @@ module Squarectl
 
       define_help description: "Manage Docker Swarm Secrets"
 
+      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

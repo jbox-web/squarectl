@@ -6,12 +6,14 @@ module Squarectl
       class Config < Admiral::Command
         define_help description: "Run docker-compose config"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -27,12 +29,14 @@ module Squarectl
       class Build < Admiral::Command
         define_help description: "Run docker-compose build"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -48,12 +52,14 @@ module Squarectl
       class Push < Admiral::Command
         define_help description: "Run docker-compose push"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -69,12 +75,14 @@ module Squarectl
       class Clean < Admiral::Command
         define_help description: "Run docker-compose clean"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -90,12 +98,14 @@ module Squarectl
       class Deploy < Admiral::Command
         define_help description: "Run docker stack deploy"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -111,12 +121,14 @@ module Squarectl
       class Setup < Admiral::Command
         define_help description: "Run docker-compose setup"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -132,12 +144,14 @@ module Squarectl
       class Destroy < Admiral::Command
         define_help description: "Run docker stack rm"
 
+        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
+        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -152,6 +166,7 @@ module Squarectl
 
       define_help description: "Run Docker Swarm commands"
 
+      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",
