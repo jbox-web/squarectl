@@ -65,7 +65,10 @@ doc: ## Generate Stacker documentation
 ameba: ## Run static code analysis
 	bin/ameba
 
-.PHONY: setup build deps clean spec doc ameba
+format: ## Format code
+	crystal tool format src/
+
+.PHONY: setup build deps clean spec doc ameba format
 
 
 ############################
