@@ -20,12 +20,13 @@ require "./admiral_patch"
 require "./squarectl/**"
 
 module Squarectl
-  VERSION = "1.5.2"
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
+  GIT_REF = {{ `git log -n 1 --format="%H" | head -c 8`.chomp.stringify }}
 
   @@environment_all : Squarectl::Config::SquarectlEnvironment?
 
   def self.version
-    VERSION
+    "#{VERSION} (#{GIT_REF})"
   end
 
   def self.load_config(config_path)

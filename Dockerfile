@@ -1,10 +1,37 @@
+###########
+# CRYSTAL #
+###########
+
+FROM alpine:3.23 AS crystal
+
+RUN apk add --update --no-cache \
+  make \
+  crystal=~1.18 \
+  shards \
+  gc-dev \
+  gc-static \
+  git \
+  libxml2-dev \
+  libxml2-static \
+  openssl-dev \
+  openssl-libs-static \
+  gmp-dev \
+  gmp-static \
+  pcre2-dev \
+  pcre2-static \
+  xz-dev \
+  xz-static \
+  yaml-dev \
+  yaml-static \
+  zlib-dev \
+  zlib-static \
+  upx
+
 #########
 # BUILD #
 #########
 
-# Build squarectl with Crystal upstream image
-# Use alpine variant to build static binary
-FROM crystallang/crystal:1.15.1-alpine AS binary-file
+FROM crystal AS build-binary-file
 
 # Fetch platforms variables from ARGS
 ARG TARGETPLATFORM
@@ -19,11 +46,9 @@ ENV \
   TARGETARCH=${TARGETARCH} \
   TARGETVARIANT=${TARGETVARIANT}
 
-# Install build dependencies
-RUN apk add --update yaml-static
-
 # Set build environment
 WORKDIR /build
+COPY .git/ /build/.git/
 COPY shard.yml shard.lock /build/
 COPY Makefile.release /build/Makefile
 COPY src/ /build/src/
@@ -33,13 +58,18 @@ RUN mkdir /build/bin
 # Build the binary
 RUN make release
 
+# Extract binary from Docker image
+FROM scratch AS binary-file
+ARG TARGETOS
+ARG TARGETARCH
+COPY --from=build-binary-file /build/bin/squarectl-${TARGETOS}-${TARGETARCH} /
 
 ###########
 # RUNTIME #
 ###########
 
 # Build distroless images \o/
-FROM gcr.io/distroless/static-debian11 AS docker-image
+FROM gcr.io/distroless/static-debian12 AS docker-image
 
 # Fetch platforms variables from ARGS
 ARG TARGETOS

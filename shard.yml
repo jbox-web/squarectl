@@ -2,7 +2,7 @@ name: squarectl
 
 version: 1.5.2
 
-crystal: 1.15.1
+crystal: '>= 1.18.0'
 
 license: MIT
 
@@ -18,7 +18,7 @@ dependencies:
     github: jwaldrip/admiral.cr
   baked_file_system:
     github: schovi/baked_file_system
-    version: 0.10.0
+    version: 0.13.0
   crystal-env:
     github: crystal-lang/crystal-env
     branch: master

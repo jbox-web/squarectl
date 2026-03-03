@@ -9,15 +9,18 @@ SHELL := /usr/bin/env bash
 PREFIX      ?= /usr/local
 INSTALL_DIR  = $(PREFIX)/bin
 
-SOURCE_FILE = src/squarectl.cr
+APP_NAME    = squarectl
+SOURCE_FILE = src/$(APP_NAME).cr
 OUTPUT_DIR  = bin
-OUTPUT_FILE = squarectl
+OUTPUT_FILE = $(APP_NAME)
 
 SPEC_OPTS            =
 COMPILE_OPTS_DEV     = --threads 4
 COMPILE_OPTS_RELEASE = --threads 4 --release --error-trace
 
 # Use sudo if current user is not root
+UID := $(shell id -u)
+
 ifneq ($(UID), 0)
 	sudo = sudo
 else
@@ -40,8 +43,8 @@ all: help
 #####################
 
 setup: ## Setup local environment
+	(which brew && brew bundle install) || true
 	asdf plugin add crystal || true
-	asdf plugin add earthly https://github.com/YR-ZR0/asdf-earthly.git || true
 	asdf install
 	asdf current
 
@@ -76,12 +79,9 @@ format: ## Format code
 ############################
 
 docker-image: ## Build local platform Docker image for local development
-	docker build . -t squarectl-dev:latest
+	docker buildx bake docker-image
 
-docker-images: ## Build multiplatforms Docker images with Earthly
-	earthly --ci --output +all-docker-images
-
-.PHONY: docker-image docker-images
+.PHONY: docker-image
 
 
 #################
@@ -96,13 +96,17 @@ deps-release: ## Install production dependencies
 	shards install --production
 
 install: ## Install squarectl in $(INSTALL_DIR)
-	$(sudo) cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/squarectl
+	$(sudo) cp $(OUTPUT_DIR)/$(OUTPUT_FILE) $(INSTALL_DIR)/$(OUTPUT_FILE)
 
 uninstall: ## Uninstall squarectl from $(INSTALL_DIR)
-	$(sudo) rm -f $(INSTALL_DIR)/squarectl
+	$(sudo) rm -f $(INSTALL_DIR)/$(OUTPUT_FILE)
 
-release-static: ## Build static binary with Earthly
-	earthly --ci --output +all-binaries
+release-static: ## Build static binary with Docker Bake
+	docker buildx bake binary
+	mv packages/linux_arm64/$(OUTPUT_FILE)-linux-arm64 packages/
+	mv packages/linux_amd64/$(OUTPUT_FILE)-linux-amd64 packages/
+	rmdir packages/linux_arm64/ packages/linux_amd64/
+	rm -f packages/*.sha256
 	cd packages; for f in *; do shasum --algorithm 256 $$f > $$f.sha256; done
 
 .PHONY: release deps-release install uninstall release-static

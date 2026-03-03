@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.6.0 (2026/05/03)
+
+* build: bump to Crystal 1.18.2
+* build: build multi-arch / multi-plaform binaries
+
 ## 1.5.1 (2023/07/05)
 
 * build: bump to Crystal 1.8.2
