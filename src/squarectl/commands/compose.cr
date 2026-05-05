@@ -1,7 +1,6 @@
 module Squarectl
   module Commands
     module Compose
-
       PRE_ARGS_BOOL = [
         "--all-resources",
         "--compatibility",
@@ -51,7 +50,7 @@ module Squarectl
             pre_args << arg
             i += 1
             pre_args << args[i] if i < args.size
-          elsif PRE_ARGS_FLAGS.any? { |f| arg.starts_with?("#{f}=") }
+          elsif PRE_ARGS_FLAGS.any? { |flag| arg.starts_with?("#{flag}=") }
             pre_args << arg
           else
             post_args << arg
