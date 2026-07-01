@@ -1,5 +1,7 @@
 module Squarectl
   module Commands
+    # Creates/removes the external Docker networks declared for the task
+    # (before `compose up`, torn down on `clean`). Mixed into `Task`.
     module Networks
       def create_docker_networks
         compose_networks.each do |net|

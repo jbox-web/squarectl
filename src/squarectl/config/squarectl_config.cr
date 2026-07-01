@@ -1,5 +1,8 @@
 module Squarectl
   module Config
+    # Root of the parsed `squarectl.yml`: the app name, the Compose version
+    # (`1` selects the legacy `docker-compose` binary), and the environments.
+    #
     # :nodoc:
     class SquarectlConfig
       include JSON::Serializable

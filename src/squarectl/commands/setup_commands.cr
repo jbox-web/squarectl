@@ -1,5 +1,8 @@
 module Squarectl
   module Commands
+    # Runs the configured setup commands via `compose exec` (the swarm and
+    # Kubernetes equivalents live in `Commands::Swarm`/`Commands::Kubectl`).
+    # Mixed into `Task`.
     module SetupCommands
       def run_docker_compose_setup_commands
         setup_commands.each do |cmd|

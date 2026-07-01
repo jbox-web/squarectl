@@ -1,6 +1,19 @@
 module Squarectl
+  # Builds a fully resolved `Task` from the config.
+  #
+  # Each resolvable attribute (env vars, domains, compose files, networks, SSL
+  # certificates, ...) is gathered from two sources — the global `all`
+  # environment and the selected environment — keeping only entries whose
+  # `target:` matches (see `find_matching_target`), then merged global-first so
+  # the environment overrides the globals. The two `define_method_*` macros
+  # generate this identical select/merge logic for hash- and array-shaped
+  # attributes respectively.
+  #
   # :nodoc:
   class TaskFactory
+    # Generates a resolver for a hash-shaped attribute: selects matching entries
+    # from `all` and the environment, reduces each side with `merge`, then merges
+    # the environment result over the globals.
     macro define_method_hash(name, klass, default_key, default_value, accessor, method)
       def self.{{name.id}}(target, environment, all)
         all_objects = all.nil? ? [] of {{klass}} : all.{{accessor}}
@@ -16,6 +29,8 @@ module Squarectl
       end
     end
 
+    # Generates a resolver for an array-shaped attribute: same selection, but
+    # concatenates (globals first, then environment) instead of merging.
     macro define_method_array(name, klass, default_value, accessor, method)
       def self.{{name.id}}(target, environment, all)
 
@@ -38,6 +53,9 @@ module Squarectl
     define_method_array :_build_task_compose_networks, Squarectl::Config::Network, String, networks, networks
     define_method_array :_build_task_ssl_certificates, Squarectl::Config::SSLCertificate, Squarectl::Config::SSLCertificateSpec, ssl_certificates, ssl_certificates
 
+    # Resolves every attribute for the given (target, environment) pair — with
+    # `all` supplying the global defaults — and assembles the `Task`. The
+    # `executor` is injectable so specs can capture output instead of shelling out.
     def self.build(target, environment, all, executor = Executor.new)
       env_vars = build_task_env_vars(target, environment, all)
       domains = build_task_domains(target, environment, all)
@@ -57,11 +75,16 @@ module Squarectl
       _build_task_env_vars(target, environment, all)
     end
 
+    # Resolves domains, then expands any `*_URL` var into `*_DOMAIN`/`*_SCHEME`.
     def self.build_task_domains(target, environment, all)
       result = _build_task_domains(target, environment, all)
       decompose_urls(result)
     end
 
+    # Resolves the compose file list. Config-declared files are looked up under
+    # `squarectl/targets/common/`, and the conventional base files
+    # (`base.yml`, `<target>/common.yml`, `<target>/<env>.yml`) are always
+    # prepended so they load first.
     def self.build_task_compose_files(target, environment, all)
       result = _build_task_compose_files(target, environment, all)
       result = result.map { |file| Squarectl.targets_common_dir.join(file) }
@@ -88,12 +111,16 @@ module Squarectl
       (all_setup_commands + env_setup_commands).map(&.to_h)
     end
 
+    # The remote Docker host (`DOCKER_HOST`) for swarm deploys — the first
+    # matching `server` entry's host, or empty when none is declared.
     def self.build_task_deploy_server(target, environment, all)
       env_server = environment.server.select { |e| find_matching_target(e, target) }
       env_server = env_server.empty? ? "" : env_server.first.host
       env_server
     end
 
+    # Resolves swarm config files. Keys are namespaced as
+    # `<app>-<envshort>__<key>` and values resolved to absolute paths.
     def self.build_task_deploy_configs(target, environment, all)
       all_config_files = all.nil? ? {} of String => String : all.config_files
       env_config_files = environment.config_files
@@ -107,6 +134,8 @@ module Squarectl
       all_config_files.merge(env_config_files)
     end
 
+    # Resolves swarm secret files. Same namespacing and path resolution as
+    # `build_task_deploy_configs`.
     def self.build_task_deploy_secrets(target, environment, all)
       all_secret_files = all.nil? ? {} of String => String : all.secret_files
       env_secret_files = environment.secret_files
@@ -120,6 +149,8 @@ module Squarectl
       all_secret_files.merge(env_secret_files)
     end
 
+    # A config entry applies to a target when its `target:` is that string (or
+    # the wildcard `"all"`), or when it is an array that includes the target.
     def self.find_matching_target(e, target)
       if e.target.is_a?(String)
         e.target == target || e.target == "all"
@@ -128,6 +159,9 @@ module Squarectl
       end
     end
 
+    # For every `*_URL` entry, derives sibling `*_DOMAIN` and `*_SCHEME` vars from
+    # the parsed URI and merges them in, so compose files can reference the parts
+    # separately. Original `*_URL` entries are kept.
     def self.decompose_urls(hash)
       new_hash = {} of String => String
       hash.each do |key, value|

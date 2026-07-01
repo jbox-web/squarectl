@@ -1,5 +1,8 @@
 module Squarectl
   module Config
+    # A command run inside a service during `setup` (via `compose exec`,
+    # `docker exec` on swarm, or `kubectl exec`), scoped to one or more targets.
+    #
     # :nodoc:
     class SetupCommand
       include JSON::Serializable

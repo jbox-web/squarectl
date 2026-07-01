@@ -1,5 +1,7 @@
 module Squarectl
   module Commands
+    # Creates/removes Docker Swarm configs on the deploy server, piping each
+    # source file into `docker config create` via stdin. Mixed into `Task`.
     module Configs
       def create_docker_configs(args)
         deploy_configs.each do |key, file|

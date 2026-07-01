@@ -1,5 +1,8 @@
 module Squarectl
   module Commands
+    # Runs `kompose` to convert a Compose configuration into Kubernetes
+    # manifests. `run_kompose_convert` feeds it the already-rendered compose
+    # config via a tempfile. Mixed into `Task`.
     module Kompose
       def run_kompose_convert(config, args)
         tempfile = File.tempfile("docker-compose", &.print(config))

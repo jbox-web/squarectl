@@ -1,4 +1,12 @@
 module Squarectl
+  # Root of the Admiral command tree and the program entry point.
+  #
+  # Each top-level subcommand (defined under `cli/`) registers its own leaf
+  # commands. Every leaf follows the same shape: load the config, resolve the
+  # environment for its target, build a `Task`, and hand off to a `Tasks::*`
+  # class. `rescue_unknown_cmd` (see `admiral_patch.cr`) prints help instead of
+  # crashing on an unknown subcommand.
+  #
   # :nodoc:
   class CLI < Admiral::Command
     define_version Squarectl.version

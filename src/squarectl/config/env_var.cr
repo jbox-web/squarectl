@@ -1,5 +1,8 @@
 module Squarectl
   module Config
+    # A set of environment variables scoped to one or more targets. Merged into
+    # the child process environment (see `Task#task_env_vars`).
+    #
     # :nodoc:
     class EnvVar
       include JSON::Serializable

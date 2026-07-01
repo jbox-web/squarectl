@@ -1,5 +1,9 @@
 module Squarectl
   module Tasks
+    # Orchestration layer for the `compose` target: each class method maps a CLI
+    # subcommand to a sequence of `Task` command calls, deciding the ordering of
+    # side effects (e.g. `up` creates SSL certs and networks first; `clean` tears
+    # them down after `down`). The heavy lifting lives in `Commands::*`.
     class Compose
       def self.config(task, args)
         task.exec_docker_compose("config", args)

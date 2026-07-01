@@ -1,5 +1,8 @@
 module Squarectl
   module Config
+    # One certificate: the domain and the cert/key output paths. Relative paths
+    # are resolved against the project root; absolute paths are used as-is.
+    #
     # :nodoc:
     class SSLCertificateSpec
       include JSON::Serializable

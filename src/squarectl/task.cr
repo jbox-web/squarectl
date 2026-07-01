@@ -1,6 +1,14 @@
 require "./commands/*"
 
 module Squarectl
+  # A fully resolved unit of work for a single (target, environment) pair.
+  #
+  # `TaskFactory` builds it by merging the global `all` environment with the
+  # selected one; the `Tasks::*` orchestrators then call the command-building
+  # methods mixed in from `Commands::*` (which ultimately shell out through the
+  # injected `Executor`). Holding the merged values here means the command
+  # builders never touch the raw config again.
+  #
   # :nodoc:
   class Task
     include YAML::Serializable
@@ -44,10 +52,13 @@ module Squarectl
     )
     end
 
+    # Docker Compose/Swarm project name, e.g. `myapp_staging`.
     def project_name
       "#{Squarectl.app_name}_#{environment.name}"
     end
 
+    # `SQUARECTL_*` variables always injected into the child process so compose
+    # files and setup commands can reference them.
     def runtime_env_vars
       {
         "SQUARECTL_CWD"       => Squarectl.root_dir.to_s,
@@ -58,10 +69,14 @@ module Squarectl
       }
     end
 
+    # Full environment handed to every spawned command: runtime vars overlaid
+    # with the config's env vars and the derived domain vars.
     def task_env_vars
       runtime_env_vars.merge(env_vars).merge(domains)
     end
 
+    # Turns the resolved compose file list into repeated `<prefix> <file>` argv
+    # pairs, e.g. `--file a.yml --file b.yml`.
     def compose_files_args(prefix)
       compose_files.map { |_| prefix }.zip(compose_files).flat_map { |args| [args.first, args.last] }
     end

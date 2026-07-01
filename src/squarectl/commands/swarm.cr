@@ -1,5 +1,8 @@
 module Squarectl
   module Commands
+    # Docker Swarm stack operations (`docker stack deploy/rm`) and setup commands
+    # run inside running service containers, all targeting the remote
+    # `DOCKER_HOST`. Mixed into `Task`.
     module Swarm
       def run_docker_stack_deploy
         args = ["stack", "deploy", compose_files_args(prefix: "--compose-file"), "--prune", "--with-registry-auth", "--resolve-image", "always", project_name].flatten

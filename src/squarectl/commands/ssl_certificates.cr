@@ -1,5 +1,8 @@
 module Squarectl
   module Commands
+    # Generates local dev SSL certificates with `mkcert` (skipping any that
+    # already exist) before `compose up`, and deletes them on `clean`. Mixed
+    # into `Task`.
     module SSLCertificates
       def create_ssl_certificates
         ssl_certificates.each do |ssl_cert|

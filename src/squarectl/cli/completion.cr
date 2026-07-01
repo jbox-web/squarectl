@@ -1,6 +1,8 @@
 module Squarectl
   class CLI < Admiral::Command
     class Completion < Admiral::Command
+      # Prints the embedded Bash completion script so it can be sourced, e.g.
+      # `source <(squarectl completion bash)`.
       class Bash < Admiral::Command
         def run
           file = Squarectl::ShellCompletion.get("bash.sh")

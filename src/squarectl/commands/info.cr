@@ -1,5 +1,8 @@
 module Squarectl
   module Commands
+    # Renders the fully resolved task (paths, env vars, files, certs, configs,
+    # secrets) as YAML for the `info` command — the introspection view of what
+    # squarectl would actually run. Mixed into `Task`.
     module Info
       def squarectl_environment
         {

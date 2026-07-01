@@ -1,5 +1,8 @@
 module Squarectl
   module Commands
+    # Applies the generated Kubernetes manifests (`kubectl apply -f`) and runs
+    # setup commands inside pods, resolving the pod name from the
+    # kompose-generated `io.kompose.service` label. Mixed into `Task`.
     module Kubectl
       def run_kubectl_apply
         args = ["apply", "-f", environment.kubernetes_dir.to_s]
