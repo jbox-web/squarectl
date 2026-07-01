@@ -3,6 +3,13 @@ name: CI
 
 permissions: {}
 
+# crystalline is the Crystal LSP server, only needed in an editor.
+# Its macOS binary (>= 0.18.0) is dynamically linked against
+# /opt/homebrew/opt/llvm/lib/libLLVM.dylib, which is absent on the runners,
+# so the plugin post_install check fails. CI never uses it, so skip installing it.
+env:
+  MISE_DISABLE_TOOLS: crystalline
+
 on:
   push:
     branches:
