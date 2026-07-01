@@ -3,7 +3,7 @@ crystalline = "https://github.com/jbox-web/vfox-crystalline.git"
 
 [tools]
 crystal = "1.18.2"
-crystalline = "0.17.1"
+crystalline = "0.18.0"
 
 [vars]
 APP_NAME    = "squarectl"
