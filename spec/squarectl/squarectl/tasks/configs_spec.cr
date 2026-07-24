@@ -45,8 +45,8 @@ Spectator.describe Squarectl::Tasks::Configs do
 
     describe ".create" do
       it "calls docker config create command" do
-        # set expectation on the cmd line
-        # FIXME: expect(executor).to receive(:run_command).with("docker", ["config", "create", "myapp-stag__MYAPP_CONFIGS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}, File.open("spec/fixtures/deploy/swarm/staging/config.sh")).and_return(true)
+        # The piped input File is asserted in deploy_input_spec.cr (spectator has
+        # no argument matcher for "any File").
         expect(executor).to receive(:run_command).with("docker", ["config", "create", "myapp-stag__MYAPP_CONFIGS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return(true)
 
         # call the method

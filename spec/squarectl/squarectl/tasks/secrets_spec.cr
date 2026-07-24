@@ -45,9 +45,8 @@ Spectator.describe Squarectl::Tasks::Secrets do
 
     describe ".create" do
       it "calls docker secret create command" do
-        # set expectation on the cmd line
-        # FIXME: expect(executor).to receive(:run_command).with("docker", ["secret", "create", "myapp-stag__MYAPP_SECRETS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}, File.open("spec/fixtures/deploy/swarm/staging/myapp.sh")).and_return(true)
-        # FIXME: expect(executor).to receive(:run_command).with("docker", ["secret", "create", "myapp-stag__POSTGRES_PASSWORD", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}, File.open("spec/fixtures/deploy/swarm/staging/postgres_password.sh")).and_return(true)
+        # The piped input Files are asserted in deploy_input_spec.cr (spectator
+        # has no argument matcher for "any File").
 
         expect(executor).to receive(:run_command).with("docker", ["secret", "create", "myapp-stag__MYAPP_SECRETS", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return(true)
         expect(executor).to receive(:run_command).with("docker", ["secret", "create", "myapp-stag__POSTGRES_PASSWORD", "-"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return(true)
