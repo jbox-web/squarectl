@@ -11,7 +11,9 @@ module Squarectl
 
       def create_docker_config(key, file)
         args = ["config", "create", key, "-"]
-        @executor.run_command("docker", args: args, env: {"DOCKER_HOST" => deploy_server}, input: File.open(file))
+        File.open(file) do |input|
+          @executor.run_command("docker", args: args, env: {"DOCKER_HOST" => deploy_server}, input: input)
+        end
       end
 
       def destroy_docker_configs(args)

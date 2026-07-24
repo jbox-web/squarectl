@@ -1,0 +1,7 @@
+---
+environments:
+  - name: all
+  - name: staging-eu
+  - name: staging-us
+  - name: production
+  - name: prod

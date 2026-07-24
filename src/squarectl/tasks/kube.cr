@@ -13,10 +13,14 @@ module Squarectl
           output = "#{output}/" unless output.ends_with?("/")
         end
 
+        # Render the compose configuration first. Only wipe the previous
+        # manifests once we actually have a configuration to convert, so a failed
+        # render never destroys the existing output.
+        config = task.capture_docker_compose("config", [] of String)
+        raise CommandError.new("Failed to render the compose configuration for conversion") if config.nil?
+
         puts "Removing previous Kubernetes configuration: #{output}"
         FileUtils.rm_rf(output)
-
-        config = task.capture_docker_compose("config", [] of String)
 
         args = ["--out", output] + args
         task.run_kompose_convert(config, args)

@@ -3,7 +3,8 @@ require "../../../spec_helper.cr"
 Spectator.describe Squarectl::Tasks::Kube do
   context "with fake task object" do
     double :task do
-      stub def capture_docker_compose(action, args)
+      stub def capture_docker_compose(action, args) : String?
+        ""
       end
       stub def run_kompose_convert(config, args)
       end
@@ -20,8 +21,8 @@ Spectator.describe Squarectl::Tasks::Kube do
     describe ".convert" do
       it "calls kompose convert command" do
         task = double(:task)
-        expect(task).to receive(:capture_docker_compose).with("config", [] of String)
-        expect(task).to receive(:run_kompose_convert).with(nil, ["--out", "foo"])
+        expect(task).to receive(:capture_docker_compose).with("config", [] of String).and_return("rendered config")
+        expect(task).to receive(:run_kompose_convert).with("rendered config", ["--out", "foo"])
         described_class.convert(task, args, "foo")
       end
     end
@@ -115,6 +116,16 @@ Spectator.describe Squarectl::Tasks::Kube do
     end
 
     describe ".setup" do
+      context "when no pod matches the service" do
+        it "does not run kubectl exec (capture_output returns nil, not an empty string)" do
+          expect(executor).to receive(:capture_output).with("kubectl", ["get", "pods", "--selector=io.kompose.service=crono", "--output=custom-columns=NAME:.metadata.name", "--no-headers=true"]).and_return(nil)
+
+          # No run_command expectation: if kubectl exec were invoked with an empty
+          # pod name, the mock would raise on the unexpected message.
+          described_class.setup(task, task_args)
+        end
+      end
+
       it "calls kubectl command" do
         expect(executor).to receive(:capture_output).with("kubectl", ["get", "pods", "--selector=io.kompose.service=crono", "--output=custom-columns=NAME:.metadata.name", "--no-headers=true"]).and_return("12345")
         expect(executor).to receive(:run_command).with("kubectl", ["exec", "12345", "--", "bash", "-l", "-c", "bin/rails myapp:db:setup"]).and_return(true)

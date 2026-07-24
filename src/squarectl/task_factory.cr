@@ -159,21 +159,26 @@ module Squarectl
       end
     end
 
-    # For every `*_URL` entry, derives sibling `*_DOMAIN` and `*_SCHEME` vars from
-    # the parsed URI and merges them in, so compose files can reference the parts
-    # separately. Original `*_URL` entries are kept.
+    # For every entry whose key ends with `_URL`, derives sibling `*_DOMAIN` and
+    # `*_SCHEME` vars from the parsed URI and merges them in, so compose files can
+    # reference the parts separately. Non-`_URL` keys are left untouched, and a
+    # `_URL` value missing a host or scheme is skipped rather than crashing.
     def self.decompose_urls(hash)
       new_hash = {} of String => String
       hash.each do |key, value|
+        next unless key.ends_with?("_URL")
+
         uri = URI.parse(value)
 
-        # generate domain key
-        domain_key = key.gsub("_URL", "_DOMAIN")
-        new_hash[domain_key] = uri.host.not_nil! # ameba:disable Lint/NotNil
+        # generate domain key (only when the URI actually has a host)
+        if host = uri.host
+          new_hash[key.sub(/_URL$/, "_DOMAIN")] = host
+        end
 
-        # generate scheme key
-        scheme_key = key.gsub("_URL", "_SCHEME")
-        new_hash[scheme_key] = uri.scheme.not_nil! # ameba:disable Lint/NotNil
+        # generate scheme key (only when the URI actually has a scheme)
+        if scheme = uri.scheme
+          new_hash[key.sub(/_URL$/, "_SCHEME")] = scheme
+        end
       end
       hash.merge(new_hash)
     end

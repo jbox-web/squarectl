@@ -105,6 +105,16 @@ Spectator.describe Squarectl::Tasks::Swarm do
     end
 
     describe ".setup" do
+      context "when no container matches the service" do
+        it "does not run docker exec (capture_output returns nil, not an empty string)" do
+          expect(executor).to receive(:capture_output).with("docker", ["ps", "--filter", "name=crono", "--format", "{{.ID}}"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return(nil)
+
+          # No run_command expectation: if docker exec were invoked with an empty
+          # id, the mock would raise on the unexpected message.
+          described_class.setup(task, task_args)
+        end
+      end
+
       it "calls docker (swarm) command" do
         expect(executor).to receive(:capture_output).with("docker", ["ps", "--filter", "name=crono", "--format", "{{.ID}}"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return("12345")
         expect(executor).to receive(:run_command).with("docker", ["exec", "12345", "bash", "-l", "-c", "bin/rails myapp:db:setup"], {"DOCKER_HOST" => "ssh://deploy@swarm-staging"}).and_return(true)

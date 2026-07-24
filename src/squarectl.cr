@@ -84,13 +84,23 @@ module Squarectl
   end
 
   # Resolves the environment selected on the command line for the given target.
-  # Matching is substring-based (`name.includes?`), so `prod` matches `production`.
-  # Raises on an unknown target/environment, and forbids any non-`compose` target
-  # on the `development` environment.
+  # An exact name match wins; otherwise the name is treated as a substring
+  # (`prod` matches `production`) but an ambiguous substring matching more than
+  # one environment is rejected rather than silently picking the first. Raises on
+  # an unknown target/environment, and forbids any non-`compose` target on the
+  # `development` environment.
   def self.find_environment(environment, target)
     raise "Target not found: #{target}" if !%w[compose swarm kubernetes].includes?(target)
-    env = environments.not_nil!.find(&.name.includes?(environment)) # ameba:disable Lint/NotNil
-    raise "Environment not found: #{environment}" if env.nil?
+
+    envs = environments.not_nil! # ameba:disable Lint/NotNil
+    env = envs.find { |e| e.name == environment }
+    if env.nil?
+      matches = envs.select(&.name.includes?(environment))
+      raise "Environment not found: #{environment}" if matches.empty?
+      raise "Ambiguous environment: #{environment} matches #{matches.map(&.name).join(", ")}" if matches.size > 1
+      env = matches.first
+    end
+
     raise "You can't use this command in development environment" if env.development? && target != "compose"
     env
   end
@@ -143,7 +153,7 @@ unless Crystal.env.test?
   begin
     Squarectl::CLI.run
   rescue e : Exception
-    puts e.message
+    STDERR.puts e.message.presence || e.inspect_with_backtrace
     exit 1
   end
 end

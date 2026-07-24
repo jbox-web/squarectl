@@ -2,7 +2,7 @@
 # subcommands/flags: run the block, and on any `Admiral::Error` print the error
 # (only when arguments were actually given) followed by the help text and exit 1.
 # Every command's `run` wraps its `super` in this.
-class Admiral::Command
+abstract class Admiral::Command
   def rescue_unknown_cmd(&)
     begin
       yield

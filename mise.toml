@@ -50,6 +50,10 @@ run = "bin/ameba"
 description = "Format code"
 run = "crystal tool format src/"
 
+[tasks."dev:format-check"]
+description = "Check code formatting without modifying files"
+run = "crystal tool format --check src/ spec/"
+
 [tasks."dev:docker-image"]
 description = "Build local multiplatforms Docker image for local development"
 run = "docker buildx bake docker-image"

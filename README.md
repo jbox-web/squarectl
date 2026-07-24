@@ -59,7 +59,9 @@ squarectl info compose staging   # print the resolved configuration for a target
 
 Arguments after the environment are passed through as-is to the underlying tool
 (e.g. `squarectl compose up staging --detach`). Export `SQUARECTL_DEBUG=true` to print the full
-command line and environment instead of running it blindly.
+command line and environment (as YAML) *before* each command runs — this is not a dry run, the
+command still executes. The dump includes every environment variable, so avoid it when the
+environment holds secrets.
 
 ## Development
 

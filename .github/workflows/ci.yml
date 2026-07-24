@@ -38,11 +38,17 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v4
 
+      - name: Check code formatting
+        run: mise dev:format-check
+
       - name: Install dependencies
         run: mise dev:deps
 
       - name: Run static code analysis
         run: mise dev:ameba
+
+      - name: Generate documentation
+        run: mise dev:doc
 
   test_linux:
     runs-on: ubuntu-latest

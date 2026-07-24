@@ -119,7 +119,7 @@ module Squarectl
       end
 
       class Setup < Admiral::Command
-        define_help description: "Run docker-compose setup"
+        define_help description: "Run Docker Swarm setup commands"
 
         # ameba:disable Lint/UselessAssign
         define_flag config : String,
@@ -178,7 +178,7 @@ module Squarectl
       register_sub_command push, Push, description: "Run docker-compose push"
       register_sub_command clean, Clean, description: "Run docker-compose clean"
       register_sub_command deploy, Deploy, description: "Run docker stack deploy"
-      register_sub_command setup, Setup, description: "Run docker stack deploy"
+      register_sub_command setup, Setup, description: "Run Docker Swarm setup commands"
       register_sub_command destroy, Destroy, description: "Run docker stack rm"
 
       def run

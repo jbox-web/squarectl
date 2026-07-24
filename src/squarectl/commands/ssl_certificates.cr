@@ -15,7 +15,7 @@ module Squarectl
         cert_path = ssl_cert["cert_path"]
         key_path = ssl_cert["key_path"]
 
-        if !File.exists?(cert_path) && !File.exists?(key_path)
+        if !File.exists?(cert_path) || !File.exists?(key_path)
           puts "Generating SSL certificate for : #{domain_name}"
 
           FileUtils.mkdir_p(File.dirname(cert_path))

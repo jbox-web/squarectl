@@ -184,9 +184,9 @@ module Squarectl
       register_sub_command build, Build, description: "Run docker-compose build"
       register_sub_command push, Push, description: "Run docker-compose push"
       register_sub_command clean, Clean, description: "Run docker-compose clean"
-      register_sub_command deploy, Deploy, description: "Deploy Docker Swarm Secrets"
-      register_sub_command setup, Setup, description: "Deploy Docker Swarm Secrets"
-      register_sub_command convert, Convert, description: "Convert Docker Swarm Secrets"
+      register_sub_command deploy, Deploy, description: "Deploy Kubernetes configuration"
+      register_sub_command setup, Setup, description: "Run kubectl exec setup commands"
+      register_sub_command convert, Convert, description: "Convert Docker Compose configuration to Kubernetes"
 
       def run
         rescue_unknown_cmd do
