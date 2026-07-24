@@ -1,0 +1,11 @@
+---
+# Development overlay (compose only): mount the app source for live-reload and
+# publish Postgres on localhost for direct access.
+services:
+  web:
+    volumes:
+      - ./:/app
+
+  postgres:
+    ports:
+      - "5432:5432"

@@ -1,0 +1,8 @@
+---
+# Shared definition of the external Traefik network. Referenced from
+# squarectl.yml via `compose_files` so both the compose and swarm targets
+# pick it up. The network itself is created out of band (see the `networks`
+# entry in squarectl.yml for the compose target).
+networks:
+  traefik-public:
+    external: true

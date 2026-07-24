@@ -1,0 +1,6 @@
+---
+# Production swarm overlay: scale the web tier up for the released image.
+services:
+  web:
+    deploy:
+      replicas: 4

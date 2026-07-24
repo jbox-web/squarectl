@@ -1,0 +1,16 @@
+---
+# Swarm-specific overlay shared by every environment: replicas and restart
+# policy live under `deploy:`. Postgres is pinned to a manager node.
+services:
+  web:
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  postgres:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager

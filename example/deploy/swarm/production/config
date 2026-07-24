@@ -1,0 +1,5 @@
+# Placeholder Docker Swarm config for the blog app.
+# The whole content of this file is piped verbatim into
+# `docker config create blog-prod__BLOG_CONFIG -`.
+log_level = info
+workers   = 4

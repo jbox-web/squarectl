@@ -1,0 +1,30 @@
+---
+# Base compose file — always prepended to the resolved compose file list for
+# every target and environment. Defines the two services and their shared
+# volume/network plumbing; per-target and per-environment overlays refine it.
+services:
+  web:
+    image: ghcr.io/example/blog:${BLOG_IMAGE_TAG:-latest}
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/blog
+      STACK_ENV: ${STACK_ENV}
+    depends_on:
+      - postgres
+    networks:
+      - blog
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - blog
+
+volumes:
+  postgres-data:
+
+networks:
+  blog:

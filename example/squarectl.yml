@@ -1,0 +1,108 @@
+---
+# Sample squarectl configuration for a fictional "blog" application.
+#
+# It defines two services (`web` + `postgres`) and three environments
+# (`all`, `development`, `production`) across the `compose` and `swarm` targets.
+# See README.md in this directory for the commands to run.
+#
+# The file is rendered as a Crinja (Jinja2) template before parsing, so
+# `{{ ENV['FOO'] }}` reads from the process environment.
+app: blog
+
+compose:
+  version: 2
+
+environments:
+
+  # Global defaults merged into every other environment.
+  - name: all
+    env_vars:
+      - target: all
+        vars:
+          BLOG_IMAGE_TAG: "{{ ENV['BLOG_IMAGE_TAG'] }}"
+
+    # Extra compose files, looked up under squarectl/targets/common/.
+    # Here the shared external Traefik network, shared by both targets.
+    compose_files:
+      - target:
+          - compose
+          - swarm
+        files:
+          - traefik.yml
+
+    # External networks created before the stack starts.
+    networks:
+      - target: compose
+        networks:
+          - traefik-public
+
+  # Local development — compose only.
+  - name: development
+    # `*_URL` domains also derive `BLOG_DOMAIN` and `BLOG_SCHEME`, consumed by
+    # the Traefik labels in targets/compose/common.yml.
+    domains:
+      - target: compose
+        domains:
+          BLOG_URL: https://blog.local
+
+    env_vars:
+      - target: compose
+        vars:
+          STACK_ENV: development
+          POSTGRES_PASSWORD: postgres
+
+    # Certificates materialized before `compose up`.
+    ssl_certificates:
+      - target: compose
+        ssl_certificates:
+          - domain: '*.local'
+            cert_path: deploy/ssl/development/wildcard.local.crt
+            key_path: deploy/ssl/development/wildcard.local.key
+
+    # Commands run by `squarectl compose setup development`.
+    setup_commands:
+      - target: compose
+        service: web
+        command:
+          - bash
+          - -l
+          - -c
+          - bin/rails db:setup
+
+  # Production — deployed to a remote Docker Swarm.
+  - name: production
+    domains:
+      - target:
+          - compose
+          - swarm
+        domains:
+          BLOG_URL: https://blog.example.com
+
+    env_vars:
+      - target: all
+        vars:
+          STACK_ENV: production
+
+    # Remote Docker host used as DOCKER_HOST for swarm deploys.
+    server:
+      - target: swarm
+        host: ssh://deploy@swarm-prod
+
+    # Docker Swarm configs — the file content is piped verbatim into
+    # `docker config create`. Namespaced as blog-prod__BLOG_CONFIG.
+    config_files:
+      BLOG_CONFIG: deploy/swarm/production/config
+
+    # Docker Swarm secrets — the file content is piped verbatim into
+    # `docker secret create`. Namespaced as blog-prod__POSTGRES_PASSWORD.
+    secret_files:
+      POSTGRES_PASSWORD: deploy/swarm/production/postgres_password
+
+    setup_commands:
+      - target: all
+        service: web
+        command:
+          - bash
+          - -l
+          - -c
+          - bin/rails db:setup

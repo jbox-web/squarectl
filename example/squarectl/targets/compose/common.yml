@@ -1,0 +1,13 @@
+---
+# Compose-specific overlay shared by every environment: publish `web` through
+# Traefik using the host derived from BLOG_URL (BLOG_DOMAIN / BLOG_SCHEME).
+services:
+  web:
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.blog.rule=Host(`${BLOG_DOMAIN}`)
+      - traefik.http.routers.blog.tls=true
+      - traefik.http.services.blog.loadbalancer.server.port=3000
+    networks:
+      - blog
+      - traefik-public
