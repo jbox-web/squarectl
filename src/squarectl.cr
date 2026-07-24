@@ -16,6 +16,10 @@ Crystal::Env.default("development")
 # Load patches
 require "./admiral_patch"
 
+# Load the leaf-command macro before the cli/ tree that uses it (the glob below
+# does not guarantee it would be required first).
+require "./squarectl/cli/leaf_command"
+
 # Load squarectl
 require "./squarectl/**"
 
@@ -30,6 +34,18 @@ module Squarectl
   GIT_REF = {{ `git log -n 1 --format="%H" | head -c 8`.chomp.stringify }}
 
   @@environment_all : Squarectl::Config::SquarectlEnvironment?
+  @@executor : Executor?
+
+  # The `Executor` the CLI hands to every built `Task`. Memoized to a real
+  # `Executor` by default; specs override it (`Squarectl.executor = mock`) to
+  # capture the commands each subcommand dispatches without shelling out.
+  def self.executor
+    @@executor ||= Executor.new
+  end
+
+  def self.executor=(executor : Executor)
+    @@executor = executor
+  end
 
   # Human-readable version string, e.g. `1.6.0 (7347781a)`.
   def self.version
@@ -51,6 +67,7 @@ module Squarectl
     @@config = nil
     @@environments = nil
     @@environment_all = nil
+    @@executor = nil
   end
 
   # Snapshot of the process environment as a plain hash, injected into the

@@ -3,144 +3,15 @@ module Squarectl
     class Kube < Admiral::Command
       SQUARECTL_TARGET = "kubernetes"
 
-      class Config < Admiral::Command
-        define_help description: "Run docker-compose config"
+      leaf_command Config, "Run docker-compose config", SQUARECTL_TARGET, Squarectl::Tasks::Compose.config(task, arguments.rest)
+      leaf_command Build, "Run docker-compose build", SQUARECTL_TARGET, Squarectl::Tasks::Compose.build(task, arguments.rest)
+      leaf_command Push, "Run docker-compose push", SQUARECTL_TARGET, Squarectl::Tasks::Compose.push(task, arguments.rest)
+      leaf_command Clean, "Run docker-compose clean", SQUARECTL_TARGET, Squarectl::Tasks::Compose.clean(task, arguments.rest)
+      leaf_command Deploy, "Deploy Kubernetes configuration", SQUARECTL_TARGET, Squarectl::Tasks::Kube.apply(task, arguments.rest)
+      leaf_command Setup, "Run kubectl exec", SQUARECTL_TARGET, Squarectl::Tasks::Kube.setup(task, arguments.rest)
 
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.config(task, arguments.rest)
-        end
-      end
-
-      class Build < Admiral::Command
-        define_help description: "Run docker-compose build"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.build(task, arguments.rest)
-        end
-      end
-
-      class Push < Admiral::Command
-        define_help description: "Run docker-compose push"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.push(task, arguments.rest)
-        end
-      end
-
-      class Clean < Admiral::Command
-        define_help description: "Run docker-compose clean"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.clean(task, arguments.rest)
-        end
-      end
-
-      class Deploy < Admiral::Command
-        define_help description: "Deploy Kubernetes configuration"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Kube.apply(task, arguments.rest)
-        end
-      end
-
-      class Setup < Admiral::Command
-        define_help description: "Run kubectl exec"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Kube.setup(task, arguments.rest)
-        end
-      end
-
+      # `convert` keeps a bespoke definition: it takes an extra `--output` flag and
+      # forwards it to the conversion.
       class Convert < Admiral::Command
         define_help description: "Convert Docker Compose configuration to Kubernetes"
 
@@ -166,7 +37,7 @@ module Squarectl
         def run
           Squarectl.load_config(flags.config)
           environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
+          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all, Squarectl.executor)
           Squarectl::Tasks::Kube.convert(task, arguments.rest, flags.output)
         end
       end

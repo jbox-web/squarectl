@@ -3,213 +3,22 @@ module Squarectl
     class Compose < Admiral::Command
       SQUARECTL_TARGET = "compose"
 
-      class Config < Admiral::Command
-        define_help description: "Run docker-compose config"
+      leaf_command Config, "Run docker-compose config", SQUARECTL_TARGET, Squarectl::Tasks::Compose.config(task, arguments.rest)
+      leaf_command Build, "Run docker-compose build", SQUARECTL_TARGET, Squarectl::Tasks::Compose.build(task, arguments.rest)
+      leaf_command Push, "Run docker-compose push", SQUARECTL_TARGET, Squarectl::Tasks::Compose.push(task, arguments.rest)
+      leaf_command Up, "Run docker-compose up", SQUARECTL_TARGET, Squarectl::Tasks::Compose.up(task, arguments.rest)
+      leaf_command Down, "Run docker-compose down", SQUARECTL_TARGET, Squarectl::Tasks::Compose.down(task, arguments.rest)
+      leaf_command Top, "Run docker-compose top", SQUARECTL_TARGET, Squarectl::Tasks::Compose.top(task, arguments.rest)
+      leaf_command Ps, "Run docker-compose ps", SQUARECTL_TARGET, Squarectl::Tasks::Compose.ps(task, arguments.rest)
+      leaf_command Setup, "Run docker-compose setup", SQUARECTL_TARGET, Squarectl::Tasks::Compose.setup(task, arguments.rest)
+      leaf_command Clean, "Run docker-compose clean", SQUARECTL_TARGET, Squarectl::Tasks::Compose.clean(task, arguments.rest)
+      leaf_command Copy, "Run docker-compose cp", SQUARECTL_TARGET, Squarectl::Tasks::Compose.cp(task, arguments.rest)
+      leaf_command Start, "Run docker-compose start", SQUARECTL_TARGET, Squarectl::Tasks::Compose.start(task, arguments.rest)
+      leaf_command Stop, "Run docker-compose stop", SQUARECTL_TARGET, Squarectl::Tasks::Compose.stop(task, arguments.rest)
 
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.config(task, arguments.rest)
-        end
-      end
-
-      class Build < Admiral::Command
-        define_help description: "Run docker-compose build"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.build(task, arguments.rest)
-        end
-      end
-
-      class Push < Admiral::Command
-        define_help description: "Run docker-compose push"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.push(task, arguments.rest)
-        end
-      end
-
-      class Up < Admiral::Command
-        define_help description: "Run docker-compose up"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.up(task, arguments.rest)
-        end
-      end
-
-      class Down < Admiral::Command
-        define_help description: "Run docker-compose down"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.down(task, arguments.rest)
-        end
-      end
-
-      class Top < Admiral::Command
-        define_help description: "Run docker-compose top"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.top(task, arguments.rest)
-        end
-      end
-
-      class Ps < Admiral::Command
-        define_help description: "Run docker-compose ps"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.ps(task, arguments.rest)
-        end
-      end
-
-      class Setup < Admiral::Command
-        define_help description: "Run docker-compose setup"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.setup(task, arguments.rest)
-        end
-      end
-
-      class Clean < Admiral::Command
-        define_help description: "Run docker-compose clean"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.clean(task, arguments.rest)
-        end
-      end
-
+      # `exec` keeps a bespoke definition: it intentionally omits the `-c` short
+      # flag so that a `-c` in the user's arguments is passed through to the
+      # executed command instead of being consumed as squarectl's config flag.
       class Exec < Admiral::Command
         define_help description: "Run docker-compose exec"
 
@@ -227,77 +36,8 @@ module Squarectl
         def run
           Squarectl.load_config(flags.config)
           environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
+          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all, Squarectl.executor)
           Squarectl::Tasks::Compose.exec(task, arguments.rest)
-        end
-      end
-
-      class Copy < Admiral::Command
-        define_help description: "Run docker-compose cp"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.cp(task, arguments.rest)
-        end
-      end
-
-      class Start < Admiral::Command
-        define_help description: "Run docker-compose start"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.start(task, arguments.rest)
-        end
-      end
-
-      class Stop < Admiral::Command
-        define_help description: "Run docker-compose stop"
-
-        # ameba:disable Lint/UselessAssign
-        define_flag config : String,
-          description: "Path to config file",
-          long: "config",
-          short: "c",
-          default: "squarectl.yml"
-
-        # ameba:disable Lint/UselessAssign
-        define_argument environment : String,
-          description: "Squarectl ENVIRONMENT",
-          required: true
-
-        def run
-          Squarectl.load_config(flags.config)
-          environment = Squarectl.find_environment(arguments.environment, SQUARECTL_TARGET)
-          task = Squarectl::TaskFactory.build(SQUARECTL_TARGET, environment, Squarectl.environment_all)
-          Squarectl::Tasks::Compose.stop(task, arguments.rest)
         end
       end
 
