@@ -1,9 +1,9 @@
-[plugins]
-crystalline = "https://github.com/jbox-web/vfox-crystalline.git"
+[settings]
+aqua.registries = ["https://github.com/jbox-web/aqua-registry"]
 
 [tools]
 crystal = "1.18.2"
-crystalline = "0.18.0"
+"aqua:elbywan/crystalline" = "0.18.0"
 
 [vars]
 APP_NAME    = "squarectl"
