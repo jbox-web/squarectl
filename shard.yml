@@ -15,7 +15,8 @@ targets:
 
 dependencies:
   admiral:
-    github: jwaldrip/admiral.cr
+    github: n-rodriguez/admiral.cr
+    branch: ci/github-actions-mise
   baked_file_system:
     github: schovi/baked_file_system
     version: 0.13.0
