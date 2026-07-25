@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 1.6.2 (2026/07/25)
+
+* fix: forward unknown flags (`-d`, `--profile`, ...) to docker compose and kompose again
+* fix: tolerate an already existing Docker network on `compose up`
+
+## 1.6.1 (2026/07/24)
+
+* build: bump Crystal to 1.20 and align CI on the canonical template
+* build: switch from asdf to mise
+* build: switch admiral to the n-rodriguez fork
+* build: switch to the JBox Aqua registry
+* fix: add support for docker compose pre-args / post-args
+* fix: resolve code audit findings
+* refactor: generate CLI leaf commands from a macro
+* test: cover completion and config/secret stdin piping
+* docs: add CLAUDE.md and an example project, expand README
+
 ## 1.6.0 (2026/05/03)
 
 * build: bump to Crystal 1.18.2
