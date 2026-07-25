@@ -75,8 +75,10 @@ FROM gcr.io/distroless/static-debian12 AS docker-image
 ARG TARGETOS
 ARG TARGETARCH
 
-# Grab squarectl binary from **binary-file** step and inject it in the final image
-COPY --from=binary-file /build/bin/squarectl-${TARGETOS}-${TARGETARCH} /usr/bin/squarectl
+# Grab squarectl binary from **binary-file** step and inject it in the final image.
+# That step copies the binary to its own root, so the path here is `/`, not the
+# `/build/bin/` of the build step it came from.
+COPY --from=binary-file /squarectl-${TARGETOS}-${TARGETARCH} /usr/bin/squarectl
 
 # Set runtime environment
 USER nonroot
