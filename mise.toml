@@ -49,7 +49,7 @@ run = "rm -rf docs && crystal doc"
 
 [tasks."dev:ameba"]
 description = "Run static code analysis"
-run = "bin/ameba"
+run = "timeout 180 bin/ameba"
 
 [tasks."dev:format"]
 description = "Format code"
