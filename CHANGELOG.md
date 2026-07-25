@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.3 (2026/07/25)
+
+* fix: publish the Docker image again, broken by a wrong binary path in the final image stage
+
 ## 1.6.2 (2026/07/25)
 
 * fix: forward unknown flags (`-d`, `--profile`, ...) to docker compose and kompose again
