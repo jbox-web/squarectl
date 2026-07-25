@@ -3,8 +3,8 @@ module Squarectl
     class Configs < Admiral::Command
       SQUARECTL_TARGET = "swarm"
 
-      leaf_command Create, "Create Docker Swarm Configs", SQUARECTL_TARGET, Squarectl::Tasks::Configs.create(task, arguments.rest)
-      leaf_command Destroy, "Destroy Docker Swarm Configs", SQUARECTL_TARGET, Squarectl::Tasks::Configs.destroy(task, arguments.rest)
+      leaf_command Create, "Create Docker Swarm Configs", SQUARECTL_TARGET, Squarectl::Tasks::Configs.create(task, arguments.rest), passthrough: false
+      leaf_command Destroy, "Destroy Docker Swarm Configs", SQUARECTL_TARGET, Squarectl::Tasks::Configs.destroy(task, arguments.rest), passthrough: false
 
       define_help description: "Manage Docker Swarm Configs"
 

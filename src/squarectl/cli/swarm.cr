@@ -7,9 +7,9 @@ module Squarectl
       leaf_command Build, "Run docker-compose build", SQUARECTL_TARGET, Squarectl::Tasks::Compose.build(task, arguments.rest)
       leaf_command Push, "Run docker-compose push", SQUARECTL_TARGET, Squarectl::Tasks::Compose.push(task, arguments.rest)
       leaf_command Clean, "Run docker-compose clean", SQUARECTL_TARGET, Squarectl::Tasks::Compose.clean(task, arguments.rest)
-      leaf_command Deploy, "Run docker stack deploy", SQUARECTL_TARGET, Squarectl::Tasks::Swarm.deploy(task, arguments.rest)
-      leaf_command Setup, "Run Docker Swarm setup commands", SQUARECTL_TARGET, Squarectl::Tasks::Swarm.setup(task, arguments.rest)
-      leaf_command Destroy, "Run docker stack rm", SQUARECTL_TARGET, Squarectl::Tasks::Swarm.destroy(task, arguments.rest)
+      leaf_command Deploy, "Run docker stack deploy", SQUARECTL_TARGET, Squarectl::Tasks::Swarm.deploy(task, arguments.rest), passthrough: false
+      leaf_command Setup, "Run Docker Swarm setup commands", SQUARECTL_TARGET, Squarectl::Tasks::Swarm.setup(task, arguments.rest), passthrough: false
+      leaf_command Destroy, "Run docker stack rm", SQUARECTL_TARGET, Squarectl::Tasks::Swarm.destroy(task, arguments.rest), passthrough: false
 
       define_help description: "Run Docker Swarm commands"
 

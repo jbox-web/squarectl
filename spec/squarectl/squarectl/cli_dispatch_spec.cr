@@ -225,6 +225,44 @@ Spectator.describe Squarectl::CLI do
     end
   end
 
+  # squarectl is a wrapper: flags it does not declare must reach the underlying
+  # binary instead of being rejected by the CLI parser. Commands that forward
+  # opt into Admiral's `allow_undefined_flags`; the ones that ignore their
+  # arguments stay strict (their rejection path calls `exit`, so it is verified
+  # against the built binary rather than here).
+  describe "unknown flag passthrough" do
+    it "forwards a post-action flag to docker-compose" do
+      run_cli(["compose", "up", "--config", CONFIG, "staging", "-d"])
+      expect(rec.commands.any?(&.includes?("up --remove-orphans -d"))).to be_true
+    end
+
+    it "hoists a compose global flag before the action verb" do
+      run_cli(["compose", "up", "--config", CONFIG, "staging", "--profile", "web"])
+      expect(rec.commands.any?(&.includes?("--profile web up --remove-orphans"))).to be_true
+    end
+
+    it "forwards the --flag=value form" do
+      run_cli(["compose", "up", "--config", CONFIG, "staging", "--profile=web"])
+      expect(rec.commands.any?(&.includes?("--profile=web up --remove-orphans"))).to be_true
+    end
+
+    it "forwards through the bespoke exec command" do
+      run_cli(["compose", "exec", "--config", CONFIG, "staging", "-T", "myapp", "ls"])
+      expect(rec.commands.any?(&.ends_with?(" exec -T myapp ls"))).to be_true
+    end
+
+    it "forwards through the bespoke kube convert command" do
+      out = File.join(Dir.tempdir, "squarectl-passthrough-out")
+      run_cli(["kube", "convert", "--config", CONFIG, "--output", out, "staging", "--volumes", "hostPath"])
+      expect(rec.commands.any?(&.ends_with?("--volumes hostPath"))).to be_true
+    end
+
+    it "still consumes squarectl's own declared flags" do
+      run_cli(["compose", "up", "--config", CONFIG, "staging", "-d"])
+      expect(rec.commands.any?(&.includes?(CONFIG))).to be_false
+    end
+  end
+
   # info is read-only (prints YAML, never shells out); characterize that each
   # target dispatches without error and without touching the executor.
   describe "info" do

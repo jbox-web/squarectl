@@ -15,9 +15,23 @@
 #   target      - the squarectl target ("compose"/"swarm"/"kubernetes"), usually
 #                 the enclosing command's `SQUARECTL_TARGET` constant
 #   task_call   - the `Tasks::*` call to run, referencing `task` and `arguments`
-macro leaf_command(name, description, target, task_call)
+#   passthrough - whether undefined flags are forwarded through `arguments.rest`
+#                 to the underlying binary instead of being rejected. Defaults to
+#                 true because most leaf commands wrap docker/kompose/kubectl;
+#                 pass `passthrough: false` on the ones that never read their
+#                 arguments (`info`, `configs`, `secrets`, ...) so a typo there
+#                 is still reported instead of silently ignored.
+#
+# Note: in passthrough mode Admiral refuses to guess an unknown flag's arity, so
+# the ENVIRONMENT argument must come before any forwarded flag
+# (`compose up staging --profile web`, not the reverse).
+macro leaf_command(name, description, target, task_call, passthrough = true)
   class {{name.id}} < Admiral::Command
     define_help description: {{description}}
+
+    {% if passthrough %}
+      allow_undefined_flags
+    {% end %}
 
     define_flag config : String,
       description: "Path to config file",

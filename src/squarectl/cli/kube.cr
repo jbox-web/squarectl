@@ -7,13 +7,16 @@ module Squarectl
       leaf_command Build, "Run docker-compose build", SQUARECTL_TARGET, Squarectl::Tasks::Compose.build(task, arguments.rest)
       leaf_command Push, "Run docker-compose push", SQUARECTL_TARGET, Squarectl::Tasks::Compose.push(task, arguments.rest)
       leaf_command Clean, "Run docker-compose clean", SQUARECTL_TARGET, Squarectl::Tasks::Compose.clean(task, arguments.rest)
-      leaf_command Deploy, "Deploy Kubernetes configuration", SQUARECTL_TARGET, Squarectl::Tasks::Kube.apply(task, arguments.rest)
-      leaf_command Setup, "Run kubectl exec", SQUARECTL_TARGET, Squarectl::Tasks::Kube.setup(task, arguments.rest)
+      leaf_command Deploy, "Deploy Kubernetes configuration", SQUARECTL_TARGET, Squarectl::Tasks::Kube.apply(task, arguments.rest), passthrough: false
+      leaf_command Setup, "Run kubectl exec", SQUARECTL_TARGET, Squarectl::Tasks::Kube.setup(task, arguments.rest), passthrough: false
 
       # `convert` keeps a bespoke definition: it takes an extra `--output` flag and
       # forwards it to the conversion.
       class Convert < Admiral::Command
         define_help description: "Convert Docker Compose configuration to Kubernetes"
+
+        # Undeclared flags are forwarded to kompose (see `leaf_command`).
+        allow_undefined_flags
 
         # ameba:disable Lint/UselessAssign
         define_flag config : String,

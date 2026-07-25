@@ -1,9 +1,9 @@
 module Squarectl
   class CLI < Admiral::Command
     class Info < Admiral::Command
-      leaf_command Compose, "Get Squarectl configuration info about Compose target", "compose", Squarectl::Tasks::Info.compose(task, arguments.rest)
-      leaf_command Swarm, "Get Squarectl configuration info about Swarm target", "swarm", Squarectl::Tasks::Info.swarm(task, arguments.rest)
-      leaf_command Kubernetes, "Get Squarectl configuration info about Kubernetes target", "kubernetes", Squarectl::Tasks::Info.kubernetes(task, arguments.rest)
+      leaf_command Compose, "Get Squarectl configuration info about Compose target", "compose", Squarectl::Tasks::Info.compose(task, arguments.rest), passthrough: false
+      leaf_command Swarm, "Get Squarectl configuration info about Swarm target", "swarm", Squarectl::Tasks::Info.swarm(task, arguments.rest), passthrough: false
+      leaf_command Kubernetes, "Get Squarectl configuration info about Kubernetes target", "kubernetes", Squarectl::Tasks::Info.kubernetes(task, arguments.rest), passthrough: false
 
       define_help description: "Get Squarectl info"
 

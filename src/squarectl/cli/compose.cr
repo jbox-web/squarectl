@@ -10,7 +10,7 @@ module Squarectl
       leaf_command Down, "Run docker-compose down", SQUARECTL_TARGET, Squarectl::Tasks::Compose.down(task, arguments.rest)
       leaf_command Top, "Run docker-compose top", SQUARECTL_TARGET, Squarectl::Tasks::Compose.top(task, arguments.rest)
       leaf_command Ps, "Run docker-compose ps", SQUARECTL_TARGET, Squarectl::Tasks::Compose.ps(task, arguments.rest)
-      leaf_command Setup, "Run docker-compose setup", SQUARECTL_TARGET, Squarectl::Tasks::Compose.setup(task, arguments.rest)
+      leaf_command Setup, "Run docker-compose setup", SQUARECTL_TARGET, Squarectl::Tasks::Compose.setup(task, arguments.rest), passthrough: false
       leaf_command Clean, "Run docker-compose clean", SQUARECTL_TARGET, Squarectl::Tasks::Compose.clean(task, arguments.rest)
       leaf_command Copy, "Run docker-compose cp", SQUARECTL_TARGET, Squarectl::Tasks::Compose.cp(task, arguments.rest)
       leaf_command Start, "Run docker-compose start", SQUARECTL_TARGET, Squarectl::Tasks::Compose.start(task, arguments.rest)
@@ -21,6 +21,9 @@ module Squarectl
       # executed command instead of being consumed as squarectl's config flag.
       class Exec < Admiral::Command
         define_help description: "Run docker-compose exec"
+
+        # Undeclared flags are forwarded to docker compose (see `leaf_command`).
+        allow_undefined_flags
 
         # ameba:disable Lint/UselessAssign
         define_flag config : String,

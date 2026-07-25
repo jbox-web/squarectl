@@ -3,8 +3,8 @@ module Squarectl
     class Secrets < Admiral::Command
       SQUARECTL_TARGET = "swarm"
 
-      leaf_command Create, "Create Docker Swarm Secrets", SQUARECTL_TARGET, Squarectl::Tasks::Secrets.create(task, arguments.rest)
-      leaf_command Destroy, "Destroy Docker Swarm Secrets", SQUARECTL_TARGET, Squarectl::Tasks::Secrets.destroy(task, arguments.rest)
+      leaf_command Create, "Create Docker Swarm Secrets", SQUARECTL_TARGET, Squarectl::Tasks::Secrets.create(task, arguments.rest), passthrough: false
+      leaf_command Destroy, "Destroy Docker Swarm Secrets", SQUARECTL_TARGET, Squarectl::Tasks::Secrets.destroy(task, arguments.rest), passthrough: false
 
       define_help description: "Manage Docker Swarm Secrets"
 
