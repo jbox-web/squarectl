@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 2.0.0 (2026/11/18)
 
 * build: build and publish the release binaries with crystalreleaser (`.crystalreleaser.yml`, `.github/workflows/release.yml`); the assets keep their names
 * feat: `squarectl licenses` prints the third-party notices embedded in the binary
