@@ -139,7 +139,7 @@ Spectator.describe Squarectl::Tasks::Compose do
 
     let(task_args) { [] of String }
 
-    let(common_args) {
+    let(common_args) do
       [
         "--project-name",
         "myapp_staging",
@@ -156,7 +156,7 @@ Spectator.describe Squarectl::Tasks::Compose do
         "--file",
         "#{root_dir}/squarectl/targets/common/networks.yml",
       ]
-    }
+    end
 
     describe ".config" do
       it "calls docker-compose command" do

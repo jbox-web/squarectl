@@ -26,8 +26,8 @@
 # the ENVIRONMENT argument must come before any forwarded flag
 # (`compose up staging --profile web`, not the reverse).
 macro leaf_command(name, description, target, task_call, passthrough = true)
-  class {{name.id}} < Admiral::Command
-    define_help description: {{description}}
+  class {{ name.id }} < Admiral::Command
+    define_help description: {{ description }}
 
     {% if passthrough %}
       allow_undefined_flags
@@ -45,9 +45,9 @@ macro leaf_command(name, description, target, task_call, passthrough = true)
 
     def run
       Squarectl.load_config(flags.config)
-      environment = Squarectl.find_environment(arguments.environment, {{target}})
-      task = Squarectl::TaskFactory.build({{target}}, environment, Squarectl.environment_all, Squarectl.executor)
-      {{task_call}}
+      environment = Squarectl.find_environment(arguments.environment, {{ target }})
+      task = Squarectl::TaskFactory.build({{ target }}, environment, Squarectl.environment_all, Squarectl.executor)
+      {{ task_call }}
     end
   end
 end

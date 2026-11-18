@@ -61,7 +61,7 @@ Spectator.describe Squarectl::Tasks::Kube do
 
     let(task_args) { [] of String }
 
-    let(docker_args) {
+    let(docker_args) do
       [
         "--project-name",
         "myapp_staging",
@@ -78,7 +78,7 @@ Spectator.describe Squarectl::Tasks::Kube do
         "--file",
         "#{root_dir}/squarectl/targets/common/networks.yml",
       ]
-    }
+    end
 
     describe ".convert" do
       it "calls kompose command" do

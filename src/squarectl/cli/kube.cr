@@ -18,21 +18,18 @@ module Squarectl
         # Undeclared flags are forwarded to kompose (see `leaf_command`).
         allow_undefined_flags
 
-        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           short: "c",
           default: "squarectl.yml"
 
-        # ameba:disable Lint/UselessAssign
         define_flag output : String,
           description: "Specify a file name or directory to save objects to (if path does not exist, a file will be created)",
           long: "output",
           short: "o",
           default: ""
 
-        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -47,7 +44,6 @@ module Squarectl
 
       define_help description: "Manage Kubernetes configuration"
 
-      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

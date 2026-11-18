@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+* build: build and publish the release binaries with crystalreleaser (`.crystalreleaser.yml`, `.github/workflows/release.yml`); the assets keep their names
+* feat: `squarectl licenses` prints the third-party notices embedded in the binary
+* build: ameba becomes a mise tool (1.7.0), its findings fixed
+
 ## 1.6.3 (2026/07/25)
 
 * fix: publish the Docker image again, broken by a wrong binary path in the final image stage

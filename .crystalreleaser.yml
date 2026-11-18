@@ -1,0 +1,83 @@
+# crystalreleaser configuration of squarectl, from the crystalreleaser.yml
+# template of ~/.claude/templates/crystal (the project name, no static_libs
+# since squarectl links no OpenSSL, and the apk packages of docker.packages
+# differ).
+# Reference: the README and .crystalreleaser.example.yml of
+# https://github.com/jbox-web/crystalreleaser, at the version mise.toml pins.
+#
+# Used by:
+#   - `mise release:static` (CI job build_static_binaries, every push):
+#     build --split --snapshot, then release --merge --snapshot --skip=publish
+#   - .github/workflows/release.yml (tag v*): build --split on three runners,
+#     then release --merge, which publishes
+#
+# WHAT IT PUBLISHES
+#   One bare binary per platform, squarectl-<os>-<arch>, each with its own
+#   squarectl-<os>-<arch>.sha256 in the format of `sha256sum`: the names users
+#   download and check by hand, stable from one release to the next (no
+#   version in them), so that a "latest/download" URL keeps working.
+#
+# THE VERSION
+#   Nothing to inject: the binary reads it from shard.yml and git at compile
+#   time (version.cr of the templates). The docker builds mount the project,
+#   .git included, and their image ships git; they run as the calling user, so
+#   git does not refuse the checkout as foreign.
+version: 1
+project_name: squarectl
+
+# Before hooks run on every runner of a split build, on the host, and not
+# during the merge, in this order. The native darwin builds need lib/ (the
+# docker builds install their own, in a volume), and the harvest copies the
+# LICENSE of each runtime shard from lib/: shards first. licenses/ must exist
+# before compiling (dev:licenses). Drop the harvest hook along with the
+# licenses machinery in a project that bakes nothing.
+before:
+  hooks:
+    - shards install --production
+    - bash scripts/harvest-licenses.sh
+
+builds:
+  - id: squarectl
+    target: squarectl
+    flags: [--release, --no-debug]
+    platforms:
+      - os: linux
+        arch: amd64
+        strategy: docker
+        static: true
+      - os: linux
+        arch: arm64
+        strategy: docker
+        static: true
+      - os: darwin
+        arch: arm64
+        strategy: native
+      - os: darwin
+        arch: amd64
+        strategy: native
+    # No docker section: the linux binaries are built in the image
+    # crystalreleaser generates, the stable Alpine with Alpine's own Crystal
+    # at the minor version mise pins, and the static libraries the stdlib
+    # links. squarectl links more: libxml2 and liblzma (crinja's XML support).
+    docker:
+      packages: [libxml2-dev, libxml2-static, xz-dev, xz-static]
+
+archives:
+  - id: default
+    formats: [binary]
+    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+
+checksum:
+  split: true
+
+changelog:
+  sort: asc
+  filters:
+    exclude: ["^docs:", "^test:", "^chore:", "Merge pull request"]
+
+release:
+  github:
+    owner: jbox-web
+    name: squarectl
+  prerelease: auto
+  replace_existing_artifacts: true

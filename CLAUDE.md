@@ -19,15 +19,31 @@ Crystal and defines all tasks. Run tasks with `mise <task>`:
 - `mise dev:deps` — `shards install`
 - `mise dev:build` — compile a dev binary to `bin/squarectl`
 - `mise dev:spec` — run the test suite (`crystal spec`)
-- `mise dev:ameba` — static analysis (`bin/ameba`)
-- `mise dev:format` — `crystal tool format src/`
-- `mise release:build` / `mise release:static` — release binaries (static build runs via Docker Buildx / `docker-bake.hcl`)
+- `mise dev:ameba` — static analysis (`ameba`, a mise tool), bounded at 180s
+- `mise dev:format` — `crystal tool format src/ spec/`
+- `mise dev:licenses` — assemble `licenses/` from `licenses.manifest` (every compiling task depends on it)
+- `mise dev:coverage` — spec line coverage with kcov, into `coverage/`
+- `mise dev:docker-image` — local multi-arch image (`docker-bake.hcl`, target `docker-image`)
+- `mise release:build` — a local `--release` binary of the host platform, plus its `.sha256` (outside the release path)
+- `mise release:static` — the release, rehearsed by crystalreleaser into `dist/`, nothing published
 
-Run a single spec file / example directly:
+Run a single spec file / example (mise forwards the arguments; never bare `crystal spec`, which
+skips the pinned toolchain and the `dev:licenses` dependency):
 ```sh
-crystal spec spec/squarectl/squarectl/task_factory_spec.cr
-crystal spec spec/squarectl/squarectl/task_factory_spec.cr:42   # by line
+mise dev:spec spec/squarectl/squarectl/task_factory_spec.cr
+mise dev:spec spec/squarectl/squarectl/task_factory_spec.cr:42   # by line
 ```
+
+Releases: crystalreleaser (`.crystalreleaser.yml`: the canonical template without `static_libs`,
+squarectl links no OpenSSL, plus the apk packages of libxml2 and xz) builds the binaries,
+`mise release:static` locally and `.github/workflows/release.yml` on a `v*` tag, which publishes
+`squarectl-<os>-<arch>` and its `.sha256`. The `Dockerfile` builds only the Docker Hub image
+(`release_dockerhub.yml`).
+
+Licenses: `licenses.manifest` follows the link line of the static binary (recorded in its
+header); `scripts/harvest-licenses.sh` assembles the gitignored `licenses/`, which
+`src/squarectl/licenses.cr` embeds and `squarectl licenses` prints. Compiling without it fails on
+purpose.
 
 Tests use **spectator** (not Crystal's built-in spec DSL) — see `spec/spec_helper.cr`.
 `Spectator.reset` calls `Squarectl.reset_config!` after each example because config is held in
@@ -43,7 +59,8 @@ Understanding one command path explains all of them — every subcommand follows
 pipeline. Example: `squarectl compose up staging`.
 
 1. **`src/squarectl/cli/*.cr`** — Admiral command tree. `CLI` (`cli.cr`) registers top-level
-   subcommands (`compose`, `swarm`, `configs`, `secrets`, `kube`, `info`, `completion`), each of
+   subcommands (`compose`, `swarm`, `configs`, `secrets`, `kube`, `info`, `completion`; plus
+   `licenses`, which only prints the embedded notices), each of
    which registers its own leaf commands. Every leaf `run` does the same three steps:
    `Squarectl.load_config(flags.config)` → `Squarectl.find_environment(env, TARGET)` →
    `TaskFactory.build(...)` → hand off to a `Tasks::*` class. The `SQUARECTL_TARGET` constant on

@@ -25,13 +25,11 @@ module Squarectl
         # Undeclared flags are forwarded to docker compose (see `leaf_command`).
         allow_undefined_flags
 
-        # ameba:disable Lint/UselessAssign
         define_flag config : String,
           description: "Path to config file",
           long: "config",
           default: "squarectl.yml"
 
-        # ameba:disable Lint/UselessAssign
         define_argument environment : String,
           description: "Squarectl ENVIRONMENT",
           required: true
@@ -46,7 +44,6 @@ module Squarectl
 
       define_help description: "Run Docker Compose commands"
 
-      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

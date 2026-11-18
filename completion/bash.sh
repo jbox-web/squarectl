@@ -20,7 +20,7 @@ _squarectl_completion() {
 
   # Case 1: squarectl command
   local global_commands_list
-  global_commands_list=(compose configs info kube secrets swarm completion)
+  global_commands_list=(compose configs info kube secrets swarm completion licenses)
 
   # Case 1: compose command
   local compose_commands_list

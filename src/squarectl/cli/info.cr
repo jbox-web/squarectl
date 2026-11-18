@@ -7,7 +7,6 @@ module Squarectl
 
       define_help description: "Get Squarectl info"
 
-      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

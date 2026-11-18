@@ -66,7 +66,7 @@ Spectator.describe Squarectl::Task do
         context "when docker compose version is not specified" do
           before_each { Squarectl.load_config("spec/fixtures/config/with_docker_compose_v1_default.yml") }
 
-          let(tuple) {
+          let(tuple) do
             {
               cmd:  "docker-compose",
               args: [
@@ -81,7 +81,7 @@ Spectator.describe Squarectl::Task do
                 "build",
               ],
             }
-          }
+          end
 
           it "returns a {cmd, args} tuple for docker compose v1" do
             expect(task.build_docker_compose_command("build", [] of String)).to eq(tuple)
@@ -91,7 +91,7 @@ Spectator.describe Squarectl::Task do
         context "when docker compose version is v1" do
           before_each { Squarectl.load_config("spec/fixtures/config/with_docker_compose_v1.yml") }
 
-          let(tuple) {
+          let(tuple) do
             {
               cmd:  "docker-compose",
               args: [
@@ -106,7 +106,7 @@ Spectator.describe Squarectl::Task do
                 "build",
               ],
             }
-          }
+          end
 
           it "returns a {cmd, args} tuple for docker compose v1" do
             expect(task.build_docker_compose_command("build", [] of String)).to eq(tuple)
@@ -116,7 +116,7 @@ Spectator.describe Squarectl::Task do
         context "when docker compose version is v2" do
           before_each { Squarectl.load_config("spec/fixtures/config/with_docker_compose_v2.yml") }
 
-          let(tuple) {
+          let(tuple) do
             {
               cmd:  "docker",
               args: [
@@ -132,7 +132,7 @@ Spectator.describe Squarectl::Task do
                 "build",
               ],
             }
-          }
+          end
 
           it "returns a {cmd, args} tuple for docker compose v2" do
             expect(task.build_docker_compose_command("build", [] of String)).to eq(tuple)

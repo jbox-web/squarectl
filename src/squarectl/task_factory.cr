@@ -15,15 +15,15 @@ module Squarectl
     # from `all` and the environment, reduces each side with `merge`, then merges
     # the environment result over the globals.
     macro define_method_hash(name, klass, default_key, default_value, accessor, method)
-      def self.{{name.id}}(target, environment, all)
-        all_objects = all.nil? ? [] of {{klass}} : all.{{accessor}}
-        env_objects = environment.{{accessor}}
+      def self.{{ name.id }}(target, environment, all)
+        all_objects = all.nil? ? [] of {{ klass }} : all.{{ accessor }}
+        env_objects = environment.{{ accessor }}
 
         all_objects = all_objects.select { |e| find_matching_target(e, target) }
         env_objects = env_objects.select { |e| find_matching_target(e, target) }
 
-        all_objects = all_objects.empty? ? {} of {{default_key}} => {{default_value}} : all_objects.map(&.{{method}}).reduce({} of {{default_key}} => {{default_value}}) { |memo, i| memo.merge(i) }
-        env_objects = env_objects.empty? ? {} of {{default_key}} => {{default_value}} : env_objects.map(&.{{method}}).reduce({} of {{default_key}} => {{default_value}}) { |memo, i| memo.merge(i) }
+        all_objects = all_objects.empty? ? {} of {{ default_key }} => {{ default_value }} : all_objects.map(&.{{ method }}).reduce({} of {{ default_key }} => {{ default_value }}) { |memo, i| memo.merge(i) }
+        env_objects = env_objects.empty? ? {} of {{ default_key }} => {{ default_value }} : env_objects.map(&.{{ method }}).reduce({} of {{ default_key }} => {{ default_value }}) { |memo, i| memo.merge(i) }
 
         all_objects.merge(env_objects)
       end
@@ -32,16 +32,16 @@ module Squarectl
     # Generates a resolver for an array-shaped attribute: same selection, but
     # concatenates (globals first, then environment) instead of merging.
     macro define_method_array(name, klass, default_value, accessor, method)
-      def self.{{name.id}}(target, environment, all)
+      def self.{{ name.id }}(target, environment, all)
 
-        all_objects = all.nil? ? [] of {{klass}} : all.{{accessor}}
-        env_objects = environment.{{accessor}}
+        all_objects = all.nil? ? [] of {{ klass }} : all.{{ accessor }}
+        env_objects = environment.{{ accessor }}
 
         all_objects = all_objects.select { |e| find_matching_target(e, target) }
         env_objects = env_objects.select { |e| find_matching_target(e, target) }
 
-        all_objects = all_objects.empty? ? [] of {{default_value}} : all_objects.map(&.{{method}}).reduce([] of {{default_value}}) { |memo, i| memo + i }
-        env_objects = env_objects.empty? ? [] of {{default_value}} : env_objects.map(&.{{method}}).reduce([] of {{default_value}}) { |memo, i| memo + i }
+        all_objects = all_objects.empty? ? [] of {{ default_value }} : all_objects.map(&.{{ method }}).reduce([] of {{ default_value }}) { |memo, i| memo + i }
+        env_objects = env_objects.empty? ? [] of {{ default_value }} : env_objects.map(&.{{ method }}).reduce([] of {{ default_value }}) { |memo, i| memo + i }
 
         all_objects + env_objects
       end

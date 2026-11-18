@@ -13,7 +13,6 @@ module Squarectl
 
       define_help description: "Run Docker Swarm commands"
 
-      # ameba:disable Lint/UselessAssign
       define_flag config : String,
         description: "Path to config file",
         long: "config",

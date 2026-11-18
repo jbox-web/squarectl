@@ -101,6 +101,7 @@ squarectl kube clean production             # remove networks + certificates
 squarectl info compose staging   # print the resolved configuration for a target/environment
                                  #   (info also accepts: swarm, kube)
 squarectl completion bash        # print the Bash completion script
+squarectl licenses               # print the third-party notices embedded in the binary
 squarectl --version              # print the version
 ```
 
@@ -223,5 +224,11 @@ mise dev:ameba    # static code analysis
 mise dev:format   # format the code
 ```
 
-Release binaries (static, multi-arch) are produced via `mise release:static`
-(Docker Buildx / `docker-bake.hcl`).
+Releases are built and published by [crystalreleaser](https://github.com/jbox-web/crystalreleaser)
+(`.crystalreleaser.yml`, `.github/workflows/release.yml`): `squarectl-<os>-<arch>` for linux and
+darwin, amd64 and arm64, each with its `.sha256`. `mise release:static` rehearses the release into
+`dist/` without publishing anything. The Docker Hub image is built from the `Dockerfile` by
+`.github/workflows/release_dockerhub.yml`.
+
+The binaries embed the notices of the code they carry (`squarectl licenses`), assembled from
+`licenses.manifest` by `scripts/harvest-licenses.sh` (`mise dev:licenses`).
